@@ -1,0 +1,26 @@
+page-search-orders {
+    .select-icon {
+        margin-right: 15px;
+    }
+    .card-header-md {
+        font-weight: bold;
+        color: gray;
+    }
+    table, th, td {
+        border-top: 1px solid #eae8ea;
+        border-bottom: 1px solid #eae8ea;
+        border-collapse: collapse;
+        padding: 5px 2px;
+        text-align: center;
+    }
+    table {
+        border: 1px solid #eae8ea;
+    }
+    .phone .text-input-md {
+        width: calc(170% - 8px - 8px);
+    }
+    .code .text-input-md {
+        width: calc(60% - 8px - 8px);
+        float: left; 
+    }
+}

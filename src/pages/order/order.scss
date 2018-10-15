@@ -1,0 +1,49 @@
+page-order {
+    .select-icon {
+        margin-right: 15px;
+    }
+    /*.item-col {
+        padding: 3px;
+        cursor: pointer;
+    }
+    .item {
+        padding: 3px;
+        border: 1px solid #393739;
+        border-radius: 6px;
+        text-align: center;
+    }
+    .item-title {
+        font-weight: bold;
+        color: #393739;
+        font-size: 14px;
+        text-align: center;
+        margin: 0;
+    }*/
+    ion-icon {
+        margin-left: 15px;
+    }
+    .card-header-md {
+        font-weight: bold;
+    }
+    .row-border {
+        border-bottom: 1px solid #eae8ea;
+        padding: 10px 5px;
+    }
+    .promotions-card {
+        padding: 10px 0 0;
+    }
+    .toast-button {
+        margin-left: 15px;
+        color: #000;
+        background: #fff;
+    }
+    .my-overlay {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 20;
+        top: 0;
+        left: 0;
+      }
+}

@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      أنواع الشعار
+    </ion-title>
+  </ion-navbar>
+  <ion-searchbar (ionInput)="filterLogos($event)"></ion-searchbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list *ngIf="searchApplied" radio-group [(ngModel)]="selectedLogoType">
+    <ion-item *ngFor="let type of logosDTO">
+      <ion-label>{{type.LogoName}} <span style="float: left;">{{type.LogoCode}}</span></ion-label>
+            <ion-radio [value]="type.LogoCode"></ion-radio>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="!searchApplied">
+    <ion-item *ngFor="let logoCategory of logoCategories">
+      <ion-icon color="primary" item-right [name]="logoCategory.icon" (click)="toggleDetails(logoCategory)"></ion-icon>
+      <span style="font-weight: bold;">{{logoCategory.name}}</span>
+
+      <ion-list style="margin-top: 15px" radio-group [(ngModel)]="selectedLogoType" *ngIf="logoCategory.showDetails">
+          <ion-item *ngFor="let type of getSubCategories(logoCategory.id)">
+            <ion-label>{{type.LogoName}} <span style="float: left;">{{type.LogoCode}}</span></ion-label>
+            <ion-radio [value]="type.LogoCode"></ion-radio>
+          </ion-item>
+        </ion-list>
+    </ion-item>
+  </ion-list>
+  <!-- <ion-list style="margin-top: 15px" radio-group [(ngModel)]="selectedLogoType">
+    <ion-item *ngFor="let type of logosDTO">
+      <ion-label>{{type.LogoName}}
+      </ion-label>
+      <ion-radio [value]="type.LogoCode"></ion-radio>
+    </ion-item>
+  </ion-list> -->
+</ion-content>
+<ion-footer>
+  <button ion-button full type="button" color="default" *ngIf="selectedLogoType !== ''" (click)="saveItem()">حفظ</button>
+  <button ion-button full type="button" color="danger" (click)="dismiss()">إلغاء</button>
+</ion-footer>

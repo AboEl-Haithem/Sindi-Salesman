@@ -1,0 +1,17 @@
+page-search-customer {
+    .select-icon {
+        margin-right: 15px;
+    }
+    .card-header-md {
+        font-weight: bold;
+    }
+    .phone .text-input-md {
+        width: calc(130% - 8px - 8px);
+        border: 1px solid #efecec80;
+    }
+    .code .text-input-md {
+        width: calc(60% - 8px - 8px);
+        float: left; 
+        border: 1px solid #efecec80;
+    }
+}

@@ -1,0 +1,18 @@
+<ion-content padding>
+    <div class="outer">
+        <div class="inner">
+            <img class="logo" src="assets/imgs/sindibackground.jpg">
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+                <ion-item>
+                    <ion-label>اسم المستخدم</ion-label>
+                    <ion-input type="text" [(ngModel)]="loginForm.userName" formControlName="userName"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>كلمة المرور</ion-label>
+                    <ion-input type="password" [(ngModel)]="loginForm.password" formControlName="password"></ion-input>
+                </ion-item>
+                <button ion-button full type="submit" [disabled]="!loginForm.valid">دخول</button>
+            </form>
+        </div>
+    </div>
+</ion-content>

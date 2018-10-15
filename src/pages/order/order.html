@@ -1,0 +1,228 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-title>طلب جديد</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <button ion-button full type="button" color="default" *ngIf="!CustomerAdded" (click)="searchForCustomer()">أضف عميل</button>
+  <ion-card *ngIf="CustomerAdded">
+    <ion-card-header>
+      بيانات العميل
+    </ion-card-header>
+    <ion-card-content padding>
+      <ion-row>
+        <ion-col col-12>
+          <span>اسم العميل:</span>
+          <span>{{customer.CardName}}</span>
+        </ion-col>
+        <ion-col col-12 *ngIf="customer.Phone1 != null">
+          <span>رقم الجوال:</span>
+          <span>{{customer.Phone1}}</span>
+        </ion-col>
+        <ion-col col-12 *ngIf="customer.E_Mail != null">
+          <span>البريد الالكتروني:</span>
+          <span>{{customer.E_Mail}}</span>
+        </ion-col>
+        <ion-col col-12 *ngIf="customer.BirthDate != null">
+          <span>تاريخ الميلاد:</span>
+          <span>{{customer.BirthDate}}</span>
+        </ion-col>
+        <ion-col col-12 *ngIf="customer.Address != null">
+          <span>العنوان:</span>
+          <span>{{customer.Address}}</span>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+
+  </ion-card>
+  <button ion-button full type="button" color="default" (click)="onAddDesign()" *ngIf="CustomerAdded">أضف تصميم</button>
+  <button ion-button full type="button" color="default" (click)="onAddPromotion()" *ngIf="CustomerAdded">أضف عرض</button>
+
+  <ion-card *ngIf="singleItems.length > 0">
+    <ion-card-header>
+      الأصناف
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item style="border-top: 1px solid #eae8ea" (click)="itemAction(i)" *ngFor="let singleItem of singleItems; let i = index">
+          <ion-thumbnail item-start>
+            <img src="{{image||'assets/imgs/icon.jpg'}}">
+          </ion-thumbnail>
+          <p class="item-title">{{singleItem.ItemName}}</p>
+          <p style="font-size: 10px">{{singleItem.FabricName}}</p>
+          <p style="font-size: 10px">{{singleItem.LogoName}}</p>
+          <ion-row>
+            <ion-col col-6>
+              <ion-icon name="body" *ngIf="singleItem.Prova"></ion-icon>
+              <ion-icon name="plane" *ngIf="singleItem.Urgent"></ion-icon>
+              <ion-badge>{{singleItem.Count}}</ion-badge>
+            </ion-col>
+            <ion-col col-6>
+              <ion-badge style="float: left">{{singleItem.TotalPrice}} ريال</ion-badge>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-list>
+      <ion-item class="park" style="border-top: 1px solid #eae8ea;">
+        <p style="float: right; font-weight: bold;">السعر الكلى للأصناف</p>
+        <ion-badge style="float: left">{{singleItemsPrice}} ريال</ion-badge>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Percentage Promotion -->
+  <ion-card *ngIf="percentageArray.length > 0">
+    <ion-card-header>
+      عروض النسبة المئوية
+    </ion-card-header>
+    <ion-card-content class="promotions-card">
+      <ion-row *ngFor="let percentageObject of percentageArray; let i = index" (click)="editPromotionOrder(i, 'percentage')" class="row-border">
+        <ion-col col-12>
+          <p style="font-weight: bold;">{{percentagePromotions[i].promotion.Description}}</p>
+        </ion-col>
+        <ion-col col-12>
+          <ion-list>
+            <ion-item style="border-top: 1px solid #eae8ea" *ngFor="let percentageItem of percentageObject">
+              <ion-thumbnail item-start>
+                <img src="{{image||'assets/imgs/icon.jpg'}}">
+              </ion-thumbnail>
+              <p class="item-title">{{percentageItem.ItemName}}</p>
+              <p style="font-size: 10px">{{percentageItem.FabricName}}</p>
+              <p style="font-size: 10px">{{percentageItem.LogoName}}</p>
+              <ion-row>
+                <ion-col col-6>
+                  <ion-icon name="body" *ngIf="percentageItem.Prova"></ion-icon>
+                  <ion-icon name="plane" *ngIf="percentageItem.Urgent"></ion-icon>
+                  <ion-badge>{{percentageItem.Count}}</ion-badge>
+                </ion-col>
+                <ion-col col-6>
+                  <ion-badge style="float: left;text-decoration: line-through;">{{percentageItem.TotalPrice}} ريال</ion-badge>
+                  <ion-badge style="float: left">
+                    {{percentageItem.PromotionPrice}} ريال
+                  </ion-badge>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+        <ion-col col-12>
+          <ion-item class="park" style="border-top: 1px solid #eae8ea;">
+            <p style="float: right; font-weight: bold;">السعر الكلى للعرض</p>
+            <ion-badge style="float: left">{{percentagePromotions[i].totalPrice}}</ion-badge>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+  <!-- Percentage Promotion -->
+  <!-- pieces Promotion -->
+  <ion-card *ngIf="pieceArray.length > 0">
+    <ion-card-header>
+      عروض القطع
+    </ion-card-header>
+    <ion-card-content class="promotions-card">
+      <ion-row *ngFor="let pieceObject of pieceArray; let i = index" (click)="editPromotionOrder(i, 'Piece')" class="row-border">
+        <ion-col col-12>
+          <p style="font-weight: bold;">{{piecePromotions[i].promotion.Description}}</p>
+        </ion-col>
+        <ion-col col-12>
+          <ion-list>
+            <ion-item style="border-top: 1px solid #eae8ea" *ngFor="let pieceItem of pieceObject">
+              <ion-thumbnail item-start>
+                <img src="{{image||'assets/imgs/icon.jpg'}}">
+              </ion-thumbnail>
+              <p class="item-title">{{pieceItem.ItemName}}</p>
+              <p style="font-size: 10px">{{pieceItem.FabricName}}</p>
+              <p style="font-size: 10px">{{pieceItem.LogoName}}</p>
+              <ion-row>
+                <ion-col col-6>
+                  <ion-icon name="body" *ngIf="pieceItem.Prova"></ion-icon>
+                  <ion-icon name="plane" *ngIf="pieceItem.Urgent"></ion-icon>
+                  <ion-badge>{{pieceItem.Count}}</ion-badge>
+                </ion-col>
+                <ion-col col-6>
+                  <ion-badge style="float: left">{{pieceItem.PromotionPrice}} ريال</ion-badge>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+        <ion-col col-12>
+          <ion-item class="park" style="border-top: 1px solid #eae8ea;">
+            <p style="float: right; font-weight: bold;">السعر الكلى للعرض</p>
+            <ion-badge style="float: left">{{piecePromotions[i].totalPrice}}</ion-badge>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+  <!-- piece Promotion -->
+  <!-- pieces Promotion -->
+  <ion-card *ngIf="valueArray.length > 0">
+    <ion-card-header>
+      عروض القيم
+    </ion-card-header>
+    <ion-card-content class="promotions-card">
+      <ion-row *ngFor="let valueObject of valueArray; let i = index" (click)="editPromotionOrder(i, 'Value')" class="row-border">
+        <ion-col col-12>
+          <p style="font-weight: bold;">{{valuePromotions[i].promotion.Description}}</p>
+        </ion-col>
+        <ion-col col-12>
+          <ion-list>
+            <ion-item style="border-top: 1px solid #eae8ea" *ngFor="let valueItem of valueObject">
+              <ion-thumbnail item-start>
+                <img src="{{image||'assets/imgs/icon.jpg'}}">
+              </ion-thumbnail>
+              <p class="item-title">{{valueItem.ItemName}}</p>
+              <p style="font-size: 10px">{{valueItem.FabricName}}</p>
+              <p style="font-size: 10px">{{valueItem.LogoName}}</p>
+              <ion-row>
+                <ion-col col-6>
+                  <ion-icon name="body" *ngIf="valueItem.Prova"></ion-icon>
+                  <ion-icon name="plane" *ngIf="valueItem.Urgent"></ion-icon>
+                  <ion-badge>{{valueItem.Count}}</ion-badge>
+                </ion-col>
+                <ion-col col-6>
+                  <ion-badge style="float: left">{{valueItem.PromotionPrice | number:'1.0-2'}} ريال</ion-badge>
+                </ion-col>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+        <ion-col col-12>
+          <ion-item class="park" style="border-top: 1px solid #eae8ea;">
+            <p style="float: right; font-weight: bold;">السعر الكلى للعرض</p>
+            <ion-badge style="float: left">{{valuePromotions[i].totalPrice | number:'1.0-2'}}</ion-badge>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+  <!-- value Promotion -->
+  <ion-grid style="padding: 0px;">
+    <ion-row>
+      <ion-col col-12 *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0">
+        <ion-item>
+          <ion-label>مكان التسليم</ion-label>
+          <ion-select [(ngModel)]="orderRequest.Datarow.ReceivingBranch" interface="action-sheet">
+            <ion-option *ngFor="let branch of branches; let i = index" [value]="branch.BranchCode" [selected]="branch.BranchCode == orderRequest.Datarow.BranchID">{{branch.BranchName}}</ion-option>
+          </ion-select>
+        </ion-item>
+        <ion-textarea [(ngModel)]="orderRequest.Datarow.ReceivingNotes" placeholder="الملاحظات" *ngIf="orderRequest.Datarow.ReceivingBranch == 0"></ion-textarea>
+      </ion-col>
+      <ion-col col-6 style="padding: 1px;">
+        <button ion-button block type="button" [disabled]="saveDisable" color="default" *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0"
+          (click)="saveOrder()">حفظ</button>
+      </ion-col>
+      <ion-col col-6 style="padding: 1px;">
+        <button ion-button block type="button" [disabled]="saveDisable" color="default" *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0"
+          (click)="saveOrder('park')">تأجيل</button>
+      </ion-col>
+      <ion-col col-12 style="padding: 1px;">
+        <button ion-button full type="button" color="danger" (click)="onDismiss()">إلغاء</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <div class="my-overlay" padding [hidden]="!saveDisable">
+  </div>
+</ion-content>

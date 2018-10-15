@@ -1,0 +1,18 @@
+page-add-customer {
+    .outer{
+        display: table;
+        width: 100%;
+        height: 100%;
+    }
+    .inner{
+        display: table-cell;
+        vertical-align: middle;
+    }
+    .phone .text-input-md {
+        width: calc(170% - 8px - 8px);
+    }
+    .code .text-input-md {
+        width: calc(60% - 8px - 8px);
+        float: left; 
+    }
+}

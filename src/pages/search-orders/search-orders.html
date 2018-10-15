@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-title>بحث الفواتير</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-segment [(ngModel)]="searchMode" (ionChange)="onChangeSegment()">
+    <ion-segment-button value=3>
+      <!--3-->
+      <b>الفواتير المكتملة</b>
+    </ion-segment-button>
+    <ion-segment-button value=1>
+      <!--1-->
+      <b>تعديل فاتورة</b>
+    </ion-segment-button>
+    <ion-segment-button value=2>
+      <!--2-->
+      <b>الفواتير المؤجلة</b>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-item>
+    <ion-label>بحث بـ</ion-label>
+    <ion-select [(ngModel)]="findOrderOption" interface="action-sheet" (ionChange)="onChange()">
+      <ion-option value="name">اسم العميل</ion-option>
+      <ion-option value="code">كود الفاتورة</ion-option>
+      <ion-option selected="true" value="phone">رقم الجوال</ion-option>
+      <ion-option value="date">تاريخ الفاتورة</ion-option>
+    </ion-select>
+  </ion-item>
+  <div *ngIf="findOrderOption == 'name' || findOrderOption == name">
+    <ion-item>
+      <ion-searchbar (ionInput)="getByCutomerName($event)" placeholder="بحث" [(ngModel)]="searchName"></ion-searchbar>
+      <ion-spinner *ngIf="showSpinner" name="bubbles"></ion-spinner>
+      <ion-list>
+        <ion-item *ngFor="let customerName of customersNames; let i = index" (click)="selectedCustomer(i)">
+          {{ customerName }}
+        </ion-item>
+      </ion-list>
+    </ion-item>
+  </div>
+  <div *ngIf="findOrderOption == 'code'">
+    <ion-item>
+      <ion-label>كود الفاتورة</ion-label>
+      <ion-input type="text" [(ngModel)]="searchValue"></ion-input>
+    </ion-item>
+  </div>
+  <div *ngIf="findOrderOption == 'phone'">
+    <ion-item> 
+      <ion-label>رقم الجوال</ion-label>
+      <ion-input type="tel" [(ngModel)]="searchValue"></ion-input>
+      <!-- <ion-input class="code" type="tel" [(ngModel)]="countryCode"></ion-input> -->
+    </ion-item> 
+  </div>
+  <div *ngIf="findOrderOption == 'date'">
+    <ion-item>
+      <ion-label>تاريخ الميلاد</ion-label>
+      <ion-datetime displayFormat="MMM DD YYYY" doneText="تم" cancelText="إلغاء" [(ngModel)]="searchValue"></ion-datetime>
+    </ion-item>
+  </div>
+  <div *ngIf="findOrderOption == 'code' || findOrderOption == 'phone' || findOrderOption == 'date'">
+    <button ion-button full type="button" color="default" [disabled]="searchValue == ''" (click)="submitSearch()">بحث</button>
+  </div>
+  <h6 *ngIf= "emptySearch" style="text-align: center; color: gray;">لا توجد فواتير!</h6>
+  <table style="width:100%" *ngIf="orders.length > 0">
+    <tr>
+      <th>كود الفاتورة</th>
+      <th>اسم العميل</th>
+      <th>تاريخ الطلب</th>
+      <th>تاريخ التسليم</th>
+      <th>actions</th>
+    </tr>
+    <tr *ngFor="let order of orders; let i = index" (click)="viewOrder(i)">
+      <td>{{order.SalesOrderID}}</td>
+      <td>{{order.CustName}}</td>
+      <td>{{order.SalesOrderDate}}</td>
+      <td>{{order.OrderDeliveryDate}}<br>{{order.UrgentDeliveryDate}}</td>
+      <td>
+        <ion-icon *ngIf="order.Park" ios="ios-pause" md="md-pause"></ion-icon>
+        <ion-icon *ngIf="order.Edittable" ios="ios-create" md="md-create"></ion-icon>
+      </td>
+    </tr>
+  </table>
+</ion-content>
+<ion-footer>
+  <button ion-button full type="button" color="danger" (click)="onDismiss()">إلغاء</button>
+</ion-footer>

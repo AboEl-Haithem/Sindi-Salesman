@@ -1,0 +1,48 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{promotion.PromotionTypeNameAr}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+    <ion-card-header>
+      تفاصيل العرض
+    </ion-card-header>
+    <ion-card-content padding>
+      <p>{{promotion.Description}}</p>
+    </ion-card-content>
+  </ion-card>
+  <button ion-button full type="button" color="default" [disabled]="disableAddDesigns" (click)="onAddDesign()">أضف تصميم</button>
+  <ion-list>
+    <ion-item style="border-bottom: 1px solid #eae8ea" (click)="itemAction(i)" *ngFor="let orderItem of selectedItems; let i = index">
+      <ion-thumbnail item-start>
+        <img src="{{image||'assets/imgs/icon.jpg'}}">
+      </ion-thumbnail>
+      <p class="item-title">{{orderItem.ItemName}}</p>
+      <p style="font-size: 10px">{{orderItem.FabricName}}</p>
+      <p style="font-size: 10px">{{orderItem.LogoName}}</p>
+
+      <ion-row>
+        <ion-col col-6>
+          <ion-icon name="body" *ngIf="orderItem.Prova"></ion-icon>
+          <ion-icon name="plane" *ngIf="orderItem.Urgent"></ion-icon>
+          <ion-badge>{{orderItem.Count}}</ion-badge>
+        </ion-col>
+        <ion-col col-6>
+          <ion-badge style="float: left">{{orderItem.PromotionPrice | number:'1.0-2'}} ريال</ion-badge>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+  </ion-list>
+  <!--<ion-item style="border-top: 1px solid #eae8ea;">
+    <p style="float: right; font-weight: bold;">السعر الكلى للعرض</p>
+    <ion-badge style="float: left">{{promotionTotalPrice}} ريال</ion-badge>
+  </ion-item>-->
+</ion-content>
+<ion-footer>
+  <button ion-button full type="button" [disabled]="disableSaveBtn" color="default" (click)="onSave()">حفظ</button>
+  <button ion-button full type="button" color="danger" (click)="onDismiss()">إلغاء</button>
+</ion-footer>

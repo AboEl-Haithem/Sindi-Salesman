@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      أنواع الأقمشة
+    </ion-title>
+  </ion-navbar>
+  <ion-searchbar (ionInput)="filterFabrics($event)"></ion-searchbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list *ngIf="searchApplied" radio-group [(ngModel)]="selectedFabricType">
+    <ion-item *ngFor="let type of fabricsDTO">
+      <ion-label>{{type.ItemName}}
+        <span style="float: left;">
+          <span [ngStyle]="{'color':type.AvailableQuantity < 50 ? 'red' : 'black' }">{{type.AvailableQuantity}}</span>
+           متر - {{type.Price}} ريال - {{type.ItemCode}}</span>
+      </ion-label>
+      <ion-radio [value]="type.ItemCode"></ion-radio>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="!searchApplied">
+
+    <ion-item *ngFor="let fabricCategory of fabricCategories">
+      <ion-icon color="primary" item-right [name]="fabricCategory.icon" (click)="toggleDetails(fabricCategory)"></ion-icon>
+      <span style="font-weight: bold;">{{fabricCategory.name}}</span>
+
+      <ion-list style="margin-top: 15px" radio-group [(ngModel)]="selectedFabricType" *ngIf="fabricCategory.showDetails">
+        <ion-item *ngFor="let type of getSubCategories(fabricCategory.name)">
+          <ion-label>{{type.ItemName}}
+            <span style="float: left;">
+              <span [ngStyle]="{'color':type.AvailableQuantity < 50 ? 'red' : 'black' }">{{type.AvailableQuantity}}</span>
+               متر - {{type.Price}} ريال - {{type.ItemCode}}</span>
+          </ion-label>
+          <ion-radio [value]="type.ItemCode"></ion-radio>
+        </ion-item>
+      </ion-list>
+
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <button ion-button full type="button" color="default" *ngIf="selectedFabricType !== ''" (click)="saveItem()">حفظ</button>
+  <button ion-button full type="button" color="danger" (click)="dismiss()">إلغاء</button>
+</ion-footer>

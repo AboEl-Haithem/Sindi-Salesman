@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-title>اختر عميل</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <ion-item>
+    <ion-label>بحث بـ</ion-label>
+    <ion-select [(ngModel)]="findCustomerOption" interface="action-sheet" (ionChange)="onChange()">
+      <ion-option value="name">اسم العميل</ion-option>
+      <ion-option value="code">كود العميل</ion-option>
+      <ion-option selected="true" value="mob">رقم الجوال</ion-option>
+    </ion-select>
+  </ion-item>
+  <div *ngIf="findCustomerOption === 'name' || findCustomerOption === name">
+    <ion-item>
+      <ion-searchbar (ionInput)="getCutomersByName($event)" placeholder="بحث" [(ngModel)]="searchName"></ion-searchbar>
+      <ion-spinner *ngIf="showSpinner" name="bubbles"></ion-spinner>
+      <ion-list>
+        <ion-item *ngFor="let customerName of customersNames; let i = index" (click)="selectedCustomer(i)">
+          {{ customerName }}
+        </ion-item>
+      </ion-list>
+    </ion-item>
+  </div>
+  <div *ngIf="findCustomerOption === 'code'">
+    <ion-item>
+      <ion-label>كود العميل</ion-label>
+      <ion-input type="text" [(ngModel)]="searchValue"></ion-input>
+    </ion-item>
+  </div>
+  <div *ngIf="findCustomerOption === 'mob'">
+    <ion-item> 
+      <ion-label>رقم الجوال</ion-label>
+      <ion-input type="tel" [(ngModel)]="searchValue"></ion-input>
+      <!-- <ion-input class="code" type="tel" [(ngModel)]="countryCode"></ion-input> -->
+    </ion-item> 
+  </div>
+  <div *ngIf="findCustomerOption === 'code' || findCustomerOption === 'mob'">
+    <button ion-button full type="button" color="default" [disabled]="searchValue == ''" (click)="submitSearch()">بحث</button>
+  </div>
+  <ion-card *ngIf="viewCustomerDetails">
+    <ion-card-header>
+      بيانات العميل
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <ion-col col-12>
+          <span>اسم العميل:</span>
+          <span>{{customer.CardName}}</span>
+        </ion-col>
+        <ion-col col-12 *ngIf="customer.Phone1 !== null">
+          <span>رقم الجوال:</span>
+          <span>{{customer.Phone1}}</span>
+        </ion-col>
+        <ion-col col-12 *ngIf="customer.E_Mail !== null">
+          <span>البريد الالكتروني:</span>
+          <span>{{customer.E_Mail}}</span>
+        </ion-col>
+        <ion-col col-12 *ngIf="customer.BirthDate !== null">
+          <span>تاريخ الميلاد:</span>
+          <span>{{customer.BirthDate}}</span>
+        </ion-col>
+        <ion-col col-12 *ngIf="customer.Address !== null">
+          <span>العنوان:</span>
+          <span>{{customer.Address}}</span>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+
+  </ion-card>
+</ion-content>
+<ion-footer>
+  <button ion-button full type="button" color="default" *ngIf="viewCustomerDetails" (click)="saveCustomer()">حفظ</button>
+  <button ion-button full type="button" color="default" *ngIf="!viewCustomerDetails" (click)="addNewCustomer()">إضافة عميل جديد</button>
+  <button ion-button full type="button" color="danger" (click)="dismiss()">إلغاء</button>
+</ion-footer>

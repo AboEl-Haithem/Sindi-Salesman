@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-title>العروض
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <!--<ion-card *ngIf="ValueOffers.length > 0">
+    <ion-card-header>
+      <p class="promo-type-title">{{ValueOffers[0].PromotionTypeNameAr}}</p>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <ion-col col-4 class="item-col" *ngFor="let ValueOffer of ValueOffers; let i = index" (click)="viewValue(i)">
+          <div class="item">
+            <p>{{ValueOffer.Description}}</p>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="piecesOffers.length > 0">
+    <ion-card-header>
+      <p class="promo-type-title">{{piecesOffers[0].PromotionTypeNameAr}}</p>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <ion-col col-4 class="item-col" *ngFor="let piecesOffer of piecesOffers; let i = index" (click)="viewPieces(i)">
+          <div class="item">
+            <p>{{piecesOffer.Description}}</p>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="percentageOffers.length > 0">
+    <ion-card-header>
+      <p class="promo-type-title">{{percentageOffers[0].PromotionTypeNameAr}}</p>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <ion-col col-4 class="item-col" *ngFor="let percentageOffer of percentageOffers; let i = index" (click)="viewPercentage(i)">
+          <div class="item">
+            <p class="percentage-offer">{{percentageOffer.PromotionInvoiceDiscount}}%</p>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>-->
+
+
+
+  <ion-card *ngFor="let type of promotionsTypes; let i = index">
+    <ion-card-header>
+      {{type[0].PromotionTypeNameAr}}
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item style="border-top: 1px solid #eae8ea" *ngFor="let promotion of type; let n = index" (click)="selectedPromotion(i, n)">
+          <ion-thumbnail item-start>
+            <img src="assets/imgs/icon.jpg">
+          </ion-thumbnail>
+          <p>{{promotion.Description}}</p>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+
+</ion-content>
+<ion-footer>
+  <button ion-button full type="button" color="danger" (click)="onDismiss()">إلغاء</button>
+</ion-footer>

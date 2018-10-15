@@ -1,0 +1,7 @@
+{
+  "name": "sindi",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

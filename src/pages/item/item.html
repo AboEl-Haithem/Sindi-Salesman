@@ -1,0 +1,69 @@
+<ion-header>
+    <ion-navbar hideBackButton>
+        <ion-title>{{itemDTO.ItemName}}</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-row>
+        <ion-col col-12>
+            <img class="item-pic" src="assets/imgs/bg1.jpg">
+        </ion-col>
+        <ion-item>
+            <ion-label>القماش الاساسي</ion-label>
+            <ion-label style="text-align: left; direction: ltr;">
+                <ion-icon ios="ios-barcode" md="md-barcode" class="bar-code" (click)="barCodeScan()"></ion-icon>
+                <span (click)="openFabricItems()"><ion-icon name="arrow-dropdown-circle"></ion-icon> {{fabricDTO.ItemName}}</span></ion-label>
+        </ion-item>
+        <ion-item *ngIf="!hideSecondaryFabric">
+            <ion-label>القماش الفرعي</ion-label>
+            <ion-label style="text-align: left; direction: ltr;">
+                <ion-icon ios="ios-barcode" md="md-barcode" class="bar-code" (click)="barCodeScan()"></ion-icon>
+                <span (click)="openSecondaryFabricItems()"><ion-icon name="arrow-dropdown-circle"></ion-icon> {{secondaryFabricDTO.SecondryFabricName}}</span></ion-label>
+        </ion-item>
+        <ion-item>
+            <ion-label>نوع الشعار</ion-label>
+            <ion-label [ngStyle]="{'color':disableLogoEdit ? 'gray' : 'black'}" style="text-align: left; direction: ltr;">
+                <ion-icon ios="ios-barcode" md="md-barcode" class="bar-code" (click)="barCodeScan()"></ion-icon>
+                <span (click)="openLogoItems()"><ion-icon name="arrow-dropdown-circle"></ion-icon> {{logoDTO.LogoName}}</span></ion-label>
+        </ion-item>
+        <ion-item>
+            <ion-label>مستعجل</ion-label>
+            <ion-toggle [(ngModel)]="orderItem.Urgent" [disabled]="branchSettings.UrgentDeliveryFees == 0" (ionChange)="urgentToggle($event)"></ion-toggle>
+        </ion-item>
+        <ion-item>
+            <ion-label>بروفه</ion-label>
+            <ion-toggle [(ngModel)]="orderItem.Prova"></ion-toggle>
+        </ion-item>
+        <ion-item *ngIf="showCounter">
+            <ion-label>عدد القطع</ion-label>
+            <ion-input type="number" [(ngModel)]="orderItem.Count" min="0"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>سعر القطعة</ion-label>
+            <ion-badge item-end>{{itemDTO.Price}} ريال</ion-badge>
+        </ion-item>
+        <ion-item *ngIf="orderItem.UrgentCost != 0 || orderItem.LogoPrice != 0">
+            <ion-label>سعر الاضافات</ion-label>
+            <ion-badge item-end>{{orderItem.UrgentCost + orderItem.LogoPrice}} ريال</ion-badge>
+        </ion-item>
+        <ion-item>
+            <ion-label>اجمالي القطعة</ion-label>
+            <ion-badge item-end>{{itemDTO.Price + orderItem.UrgentCost + orderItem.LogoPrice}} ريال</ion-badge>
+        </ion-item>
+        <ion-item *ngIf="orderItem.Count > 1">
+            <ion-label>اجمالي {{orderItem.Count}} قطع</ion-label>
+            <ion-badge item-end>{{(itemDTO.Price + orderItem.UrgentCost + orderItem.LogoPrice) * orderItem.Count}} ريال</ion-badge>
+        </ion-item>
+        <ion-item *ngIf="orderItem.Prova && fabricDTO.ItemName != 'اختر نوع القماش'">
+            <ion-label>موعد البروفه</ion-label>
+            <ion-label style="text-align: left; direction: ltr;">{{orderItem.ProvaDate | date:'dd-MM-yyyy'}}</ion-label>
+        </ion-item>
+        <ion-item *ngIf="fabricDTO.ItemName != 'اختر نوع القماش'">
+            <ion-label>موعد التسليم</ion-label>
+            <ion-label style="text-align: left; direction: ltr;">{{delivaryDate | date:'dd-MM-yyyy'}}</ion-label>
+        </ion-item>
+    </ion-row>
+    <button ion-button full type="button" color="default" (click)="saveItem()" [disabled]="fabricDTO.ItemName == 'اختر نوع القماش'">حفظ</button>
+    <button ion-button full type="button" color="danger" (click)="dismiss()">إلغاء</button>
+</ion-content>

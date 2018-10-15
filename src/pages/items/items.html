@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-title>التصميمات</ion-title>
+  </ion-navbar>
+  <ion-searchbar (ionInput)="filterItems($event)"></ion-searchbar>
+</ion-header>
+
+<ion-content padding>
+  <!--<ion-row>
+    <ion-col col-4 class="item-col" (click)="viewItem(i)" *ngFor="let item of items; let i = index">
+      <div class="item">
+        <p class="item-title">{{item.ItemName}}</p>
+        <img class="item-pic" src="{{item.BitmapPath||'assets/imgs/c10.jpg'}}">
+        <ion-badge>{{item.Price}} ريال</ion-badge>
+      </div>
+    </ion-col>
+  </ion-row>-->
+  <ion-card *ngIf="items.length > 0">
+    <ion-card-header>
+      اختر تصميم
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item style="border-top: 1px solid #eae8ea" *ngFor="let item of items; let i = index" (click)="viewItem(i)">
+          <ion-thumbnail item-start>
+            <img src="assets/imgs/icon.jpg">
+          </ion-thumbnail>
+          <p class="item-title">{{item.ItemName}}</p>
+          <h5>{{item.ItemCode}}</h5>
+          <ion-badge>{{item.Price}} ريال</ion-badge>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-footer>
+  <button ion-button full type="button" color="danger" (click)="onDismiss()">إلغاء</button>
+</ion-footer>

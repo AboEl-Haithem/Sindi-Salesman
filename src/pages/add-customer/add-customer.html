@@ -1,0 +1,38 @@
+<ion-header>
+    <ion-navbar hideBackButton>
+      <ion-title>إضافة عميل جديد</ion-title>
+    </ion-navbar>
+  </ion-header>
+<ion-content padding>
+  <div class="outer">
+    <div class="inner">
+        <!-- <h3 class="page-title">إضافة عميل جديد</h3> -->
+        <form [formGroup]="addCustomerForm" (ngSubmit)="onAddCustomer()">
+          <ion-item>
+            <ion-label>اسم العميل</ion-label>
+            <ion-input type="text" [(ngModel)]="addCustomerForm.CardName" formControlName="CardName"></ion-input>
+          </ion-item>
+          <ion-item> 
+            <ion-label>رقم الجوال</ion-label>
+            <ion-input type="tel" [(ngModel)]="addCustomerForm.Phone1" formControlName="Phone1"></ion-input>
+            <!-- <ion-input class="code" type="tel" [(ngModel)]="addCustomerForm.countryCode" formControlName="countryCode"></ion-input> -->
+          </ion-item> 
+          <ion-item>
+            <ion-label>العنوان</ion-label>
+            <ion-input type="text" [(ngModel)]="addCustomerForm.Address" formControlName="Address"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>البريد الالكتروني</ion-label>
+            <ion-input type="text" [(ngModel)]="addCustomerForm.E_Mail" formControlName="E_Mail"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>تاريخ الميلاد</ion-label>
+            <ion-datetime displayFormat="MMM DD YYYY" doneText="تم" cancelText="إلغاء"
+             [(ngModel)]="addCustomerForm.BirthDate" formControlName="BirthDate"></ion-datetime>
+          </ion-item>
+          <button ion-button full type="submit" [disabled]="!addCustomerForm.valid" style="margin-bottom: 20px">إضافة عميل</button>
+          <button ion-button full type="button" color="danger" (click)="dismiss()">إلغاء</button>
+        </form>
+    </div>
+  </div>
+</ion-content>
