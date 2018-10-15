@@ -107,7 +107,8 @@ export class SearchOrdersPage implements OnInit {
     if (this.orders[i].Edittable) {
       let data = {
         mode: 'edit',
-        id: this.orders[i].SalesOrderID
+        id: this.orders[i].SalesOrderID,
+        data: this.orders[i]
       }
       let modal = this.modalCtrl.create(OrderPage, data);
       modal.present();

@@ -43,6 +43,7 @@ export class PromotionItemsPage implements OnInit {
       loader.dismiss();
     }, err => {
       this.showError();
+      loader.dismiss();
     });
   }
   filterItems(event: any) {

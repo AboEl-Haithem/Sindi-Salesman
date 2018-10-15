@@ -58,7 +58,7 @@ export class OrderPage implements OnInit {
 
   pieceArray: any[] = [];
   piecePromotions: CalcPromotion[] = [];
-  saveDisable = false; 
+  saveDisable = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,
     public viewCtrl: ViewController, public alertCtrl: AlertController, private storage: Storage,
@@ -95,6 +95,22 @@ export class OrderPage implements OnInit {
       loader.dismiss();
       this.showError();
     });
+    if (this.navParams.data.mode == 'edit') {
+      this.orderRequest.Datarow = this.navParams.data.data;
+      this.getService.GetCustomerByCode(this.orderRequest.Datarow.CustomerID).subscribe(res => {
+        this.customer = res;
+        this.CustomerAdded = true
+        this.getService.getOrderItemsBySalesId(this.navParams.data.id).subscribe(response => {
+          this.fetchItems(response);
+        }, error => {
+          this.showError();
+          loader.dismiss();
+        });
+      }, err => {
+        this.showError();
+        loader.dismiss();
+      });
+    }
   }
 
   searchForCustomer() {
@@ -394,7 +410,38 @@ export class OrderPage implements OnInit {
     });
     modal.present();
   }
-
+  fetchItems(items: OrderItem[]) {
+    console.log(items);
+    let tempValue = [];
+    let tempValueIds = [];
+    let tempPiece = [];
+    let tempPieceIds = [];
+    let tempPercentage = [];
+    let tempPercentageIds = [];
+    items.forEach(item => {
+      if (item.PromotionTypeID == null) {
+        this.singleItems.push(item);
+      }
+      if (item.PromotionTypeID == 1) {
+        tempValue.push(item);
+        tempValueIds.push(item.promotionSubID);
+      }
+      if (item.PromotionTypeID == 2) {
+        tempPercentage.push(item);
+        tempPercentageIds.push(item.promotionSubID);
+      }
+      if (item.PromotionTypeID == 3) {
+        tempPiece.push(item);
+        tempPieceIds.push(item.promotionSubID);
+      }
+    });
+    if (this.singleItems.length > 0) {
+      this.singleItemsTotal();
+    }
+    let filteredValIds = this.remove_duplicates(tempValueIds);
+    let filteredPieceIds = this.remove_duplicates(tempPieceIds);
+    let filteredPercIds = this.remove_duplicates(tempPercentageIds);
+  }
   deleteConfirm(i) {
     let alert = this.alertCtrl.create({
       message: 'هل تريد حذف الصنف؟',

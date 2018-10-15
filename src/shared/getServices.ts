@@ -57,4 +57,7 @@ export class GetService {
     GetAllBranches() {
         return this.http.get(this.connection.baseUrl+'/Promotions/GetAllBranches').map(res => res.json());
     } 
+    getOrderItemsBySalesId(id) {
+        return this.http.get(this.connection.baseUrl+'/Promotions/GetOrderItemsBySalesId?Id=' + id).map(res => res.json());
+        }
 }
