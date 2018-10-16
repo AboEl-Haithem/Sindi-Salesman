@@ -373,6 +373,19 @@ export class OrderPage implements OnInit {
     });
     return orderTypes;
   }
+  remove_duplicated(arr) {
+    for (let i = 0; i < arr.length - 1; i++) {
+      if (arr[i] == arr[i + 1]) {
+        arr.splice(i, 1);
+        i--;
+      }
+    }
+    let orderTypes: ItemsTypes[] = [];
+    arr.forEach(element => {
+      orderTypes.push(element);
+    });
+    return orderTypes;
+  }
   calcDates(days) {
     let date = new Date();
     date.setDate(date.getDate() + days);
@@ -413,6 +426,7 @@ export class OrderPage implements OnInit {
   fetchItems(items: OrderItem[]) {
     console.log(items);
     let tempValue = [];
+    let tempValueFiltered = [];
     let tempValueIds = [];
     let tempPiece = [];
     let tempPieceIds = [];
@@ -424,23 +438,46 @@ export class OrderPage implements OnInit {
       }
       if (item.PromotionTypeID == 1) {
         tempValue.push(item);
-        tempValueIds.push(item.promotionSubID);
       }
       if (item.PromotionTypeID == 2) {
         tempPercentage.push(item);
-        tempPercentageIds.push(item.promotionSubID);
       }
       if (item.PromotionTypeID == 3) {
         tempPiece.push(item);
-        tempPieceIds.push(item.promotionSubID);
       }
     });
     if (this.singleItems.length > 0) {
       this.singleItemsTotal();
     }
-    let filteredValIds = this.remove_duplicates(tempValueIds);
-    let filteredPieceIds = this.remove_duplicates(tempPieceIds);
-    let filteredPercIds = this.remove_duplicates(tempPercentageIds);
+    tempValue.forEach(item => {
+      tempValueIds.push(item.PromotionSubId);
+    });
+    console.log(tempValueIds);
+
+    let filteredValIds = this.remove_duplicated(tempValueIds);
+    let filteredPieceIds = this.remove_duplicated(tempPieceIds);
+    let filteredPercIds = this.remove_duplicated(tempPercentageIds);
+    filteredValIds.forEach(id => {
+      tempValueFiltered = [];
+      tempValue.forEach(item => {
+        if (item.PromotionSubId == id) {
+          tempValueFiltered.push(item);
+        }
+      });
+      this.valueArray.push(tempValueFiltered);
+      for (let i = 0; i < this.valueArray.length; i++) {
+        console.log('valueArray', this.valueArray[i]);
+        this.valuePromotions[i] = {items: []};
+        this.valuePromotions[i].items = this.valueArray[i];
+      }
+    });
+    for (let i = 0; i < this.valuePromotions.length; i++) {
+      this.getService.getPromotionById(this.valuePromotions[i].items[i].PromotionID).subscribe(resp => {
+        this.valuePromotions[i].promotion = resp;
+      });
+      this.valuePromotions[i].totalPrice = this.valuePromotions[i].items[i].PromotionPrice;
+    }
+    console.log('valuePromotions', this.valuePromotions);
   }
   deleteConfirm(i) {
     let alert = this.alertCtrl.create({

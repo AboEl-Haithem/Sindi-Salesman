@@ -8,6 +8,7 @@ import { LoginPage } from '../pages/login/login';
 import { StartPage } from '../pages/start/start';
 
 import { UserDTO } from '../shared/userDTO';
+import { SearchOrdersPage } from '../pages/search-orders/search-orders';
 
 @Component({
   templateUrl: 'app.html'
@@ -27,7 +28,8 @@ export class MyApp {
         }
         else {
           this.userDTO.userId = parseInt(data);
-          this.app.getRootNav().setRoot(StartPage);
+          /* this.app.getRootNav().setRoot(StartPage); */
+          this.app.getRootNav().setRoot(SearchOrdersPage);
         }
       });
       statusBar.styleDefault();

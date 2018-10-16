@@ -165,7 +165,7 @@
     <ion-card-content class="promotions-card">
       <ion-row *ngFor="let valueObject of valueArray; let i = index" (click)="editPromotionOrder(i, 'Value')" class="row-border">
         <ion-col col-12>
-          <p style="font-weight: bold;">{{valuePromotions[i].promotion.Description}}</p>
+          <p style="font-weight: bold;">{{valuePromotions[i].promotion?.Description}}</p>
         </ion-col>
         <ion-col col-12>
           <ion-list>

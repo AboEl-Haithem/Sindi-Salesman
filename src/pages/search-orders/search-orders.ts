@@ -16,12 +16,12 @@ export class SearchOrdersPage implements OnInit {
   customers: CustomerDTO[];
   customer: CustomerDTO;
   customersNames: string[];
-  findOrderOption: any = 'phone';
-  searchValue: string = '+966';
+  findOrderOption: any = 'code';
+  searchValue: string = '50162';
   searchName: string;
   showSpinner: boolean = false;
-  GetCustomer: any;
-  searchMode: string = '1';
+  GetCustomer: any; 
+  searchMode: string = '3';
   orders: any[] = [];
   countryCode: string = '+966';
   emptySearch = false;
