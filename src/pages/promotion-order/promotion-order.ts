@@ -204,7 +204,6 @@ export class PromotionOrderPage {
           };
         }*/
         this.selectedItems.sort((a, b) => a.TotalPrice - b.TotalPrice);
-        console.log(this.selectedItems);
         for (let i = 0; i < this.promotion.PromotionFreeItemNumber; i++) {
           this.selectedItems[i].PromotionPrice = 0;
         }
@@ -217,7 +216,6 @@ export class PromotionOrderPage {
         this.disableSaveBtn = false;
         this.disableAddDesigns = true;
         this.selectedItems.sort((a, b) => a.TotalPrice - b.TotalPrice);
-        console.log(this.selectedItems);
         for (let i = 0; i < this.promotion.PromotionItemsToPaid; i++) {
           this.selectedItems[i].PromotionPrice = 0;
         }
@@ -325,6 +323,9 @@ export class PromotionOrderPage {
     let totalPrice: number = 0;
     this.selectedItems.forEach(item => {
       totalPrice += item.PromotionPrice
+    });
+    this.selectedItems.forEach(item => {
+      item.PromotionTotalPrice = totalPrice
     });
     let data: CalcPromotion = {
       promotion: this.promotion,

@@ -33,6 +33,7 @@ export interface OrderItem {
     PromotionTypeID?: number;
     promotionSubID?: number;
     PromotionPrice?: number;
+    PromotionTotalPrice?: number;
 
 
 }

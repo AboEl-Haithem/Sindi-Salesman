@@ -46,4 +46,14 @@ page-order {
         top: 0;
         left: 0;
       }
+      .list-ios > .item-block:last-child, .list-ios > .item-wrapper:last-child .item-block {
+        border: none !important;
+    }
+    .card-ios {
+        margin: 0;
+        width: calc(100%);
+    }
+    ion-badge {
+        margin-bottom: 1px;
+    }
 }

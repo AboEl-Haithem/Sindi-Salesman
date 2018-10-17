@@ -21,11 +21,13 @@ import { CalcPromotion } from '../../shared/promotionsDTO';
 import { Branches } from '../../shared/branchSettings';
 import { PostService } from '../../shared/postServices';
 import { GetService } from '../../shared/getServices';
+import { UpdateService } from './update-service';
 
 @IonicPage()
 @Component({
   selector: 'page-order',
   templateUrl: 'order.html',
+  providers: [UpdateService]
 })
 export class OrderPage implements OnInit {
   branchSettings: BranchSettings = {};
@@ -63,7 +65,8 @@ export class OrderPage implements OnInit {
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,
     public viewCtrl: ViewController, public alertCtrl: AlertController, private storage: Storage,
     private postService: PostService, public actionSheetCtrl: ActionSheetController, private getServices: GetService
-    , public loadingCtrl: LoadingController, private getService: GetService, public ToastCtrl: ToastController) {
+    , public loadingCtrl: LoadingController, private getService: GetService, public ToastCtrl: ToastController,
+    private updateService: UpdateService) {
   }
 
   ngOnInit() {
@@ -71,19 +74,6 @@ export class OrderPage implements OnInit {
       cssClass: 'transperant_loader'
     });
     loader.present();
-    this.storage.get('userId').then(data => {
-      this.orderRequest.Datarow.SalesManID = data;
-    });
-    this.storage.get('branchId').then(data => {
-      this.orderRequest.Datarow.BranchID = data;
-      this.getServices.GetSettingByBranch(data).subscribe(response => {
-        this.branchSettings = response;
-      }, err => {
-        loader.dismiss();
-        this.showError();
-      });
-    });
-    this.orderRequest.operation = "new";
     this.getService.GetAllBranches().subscribe(response => {
       this.branches = response;
       this.branches.push({
@@ -95,13 +85,43 @@ export class OrderPage implements OnInit {
       loader.dismiss();
       this.showError();
     });
-    if (this.navParams.data.mode == 'edit') {
+    ////////////////// ADD More////////////////////
+    if (this.navParams.data.mode == 'new') {
+      this.storage.get('userId').then(data => {
+        this.orderRequest.Datarow.SalesManID = data;
+      });
+      this.storage.get('branchId').then(data => {
+        this.orderRequest.Datarow.BranchID = data;
+        this.getServices.GetSettingByBranch(data).subscribe(response => {
+          this.branchSettings = response;
+        }, err => {
+          loader.dismiss();
+          this.showError();
+        });
+      });
+      this.orderRequest.operation = "new";
+    }
+    ////////////////// EDIT More////////////////////    
+    else if (this.navParams.data.mode == 'edit') {
       this.orderRequest.Datarow = this.navParams.data.data;
+      this.orderRequest.Datarow.SalesManID = this.navParams.data.data.SalesManID;
+      this.orderRequest.Datarow.BranchID = this.navParams.data.data.BranchID;
       this.getService.GetCustomerByCode(this.orderRequest.Datarow.CustomerID).subscribe(res => {
         this.customer = res;
         this.CustomerAdded = true
         this.getService.getOrderItemsBySalesId(this.navParams.data.id).subscribe(response => {
-          this.fetchItems(response);
+          let fetchedItems = this.updateService.fetchItems(response);
+          this.singleItems = fetchedItems.singleItems;
+          this.singleItemsPrice = fetchedItems.singleItemsPrice;
+
+          this.valuePromotions = fetchedItems.valuePromotions;
+          this.valueArray = fetchedItems.valueArray;
+
+          this.piecePromotions = fetchedItems.piecePromotions;
+          this.pieceArray = fetchedItems.pieceArray;
+
+          this.percentagePromotions = fetchedItems.percentagePromotions;
+          this.percentageArray = fetchedItems.percentageArray;
         }, error => {
           this.showError();
           loader.dismiss();
@@ -373,19 +393,7 @@ export class OrderPage implements OnInit {
     });
     return orderTypes;
   }
-  remove_duplicated(arr) {
-    for (let i = 0; i < arr.length - 1; i++) {
-      if (arr[i] == arr[i + 1]) {
-        arr.splice(i, 1);
-        i--;
-      }
-    }
-    let orderTypes: ItemsTypes[] = [];
-    arr.forEach(element => {
-      orderTypes.push(element);
-    });
-    return orderTypes;
-  }
+
   calcDates(days) {
     let date = new Date();
     date.setDate(date.getDate() + days);
@@ -423,62 +431,7 @@ export class OrderPage implements OnInit {
     });
     modal.present();
   }
-  fetchItems(items: OrderItem[]) {
-    console.log(items);
-    let tempValue = [];
-    let tempValueFiltered = [];
-    let tempValueIds = [];
-    let tempPiece = [];
-    let tempPieceIds = [];
-    let tempPercentage = [];
-    let tempPercentageIds = [];
-    items.forEach(item => {
-      if (item.PromotionTypeID == null) {
-        this.singleItems.push(item);
-      }
-      if (item.PromotionTypeID == 1) {
-        tempValue.push(item);
-      }
-      if (item.PromotionTypeID == 2) {
-        tempPercentage.push(item);
-      }
-      if (item.PromotionTypeID == 3) {
-        tempPiece.push(item);
-      }
-    });
-    if (this.singleItems.length > 0) {
-      this.singleItemsTotal();
-    }
-    tempValue.forEach(item => {
-      tempValueIds.push(item.PromotionSubId);
-    });
-    console.log(tempValueIds);
 
-    let filteredValIds = this.remove_duplicated(tempValueIds);
-    let filteredPieceIds = this.remove_duplicated(tempPieceIds);
-    let filteredPercIds = this.remove_duplicated(tempPercentageIds);
-    filteredValIds.forEach(id => {
-      tempValueFiltered = [];
-      tempValue.forEach(item => {
-        if (item.PromotionSubId == id) {
-          tempValueFiltered.push(item);
-        }
-      });
-      this.valueArray.push(tempValueFiltered);
-      for (let i = 0; i < this.valueArray.length; i++) {
-        console.log('valueArray', this.valueArray[i]);
-        this.valuePromotions[i] = {items: []};
-        this.valuePromotions[i].items = this.valueArray[i];
-      }
-    });
-    for (let i = 0; i < this.valuePromotions.length; i++) {
-      this.getService.getPromotionById(this.valuePromotions[i].items[i].PromotionID).subscribe(resp => {
-        this.valuePromotions[i].promotion = resp;
-      });
-      this.valuePromotions[i].totalPrice = this.valuePromotions[i].items[i].PromotionPrice;
-    }
-    console.log('valuePromotions', this.valuePromotions);
-  }
   deleteConfirm(i) {
     let alert = this.alertCtrl.create({
       message: 'هل تريد حذف الصنف؟',

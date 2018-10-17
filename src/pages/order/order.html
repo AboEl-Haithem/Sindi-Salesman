@@ -78,7 +78,7 @@
     <ion-card-content class="promotions-card">
       <ion-row *ngFor="let percentageObject of percentageArray; let i = index" (click)="editPromotionOrder(i, 'percentage')" class="row-border">
         <ion-col col-12>
-          <p style="font-weight: bold;">{{percentagePromotions[i].promotion.Description}}</p>
+          <p style="font-weight: bold;">{{percentagePromotions[i].promotion?.Description}}</p>
         </ion-col>
         <ion-col col-12>
           <ion-list>
@@ -123,7 +123,7 @@
     <ion-card-content class="promotions-card">
       <ion-row *ngFor="let pieceObject of pieceArray; let i = index" (click)="editPromotionOrder(i, 'Piece')" class="row-border">
         <ion-col col-12>
-          <p style="font-weight: bold;">{{piecePromotions[i].promotion.Description}}</p>
+          <p style="font-weight: bold;">{{piecePromotions[i].promotion?.Description}}</p>
         </ion-col>
         <ion-col col-12>
           <ion-list>
