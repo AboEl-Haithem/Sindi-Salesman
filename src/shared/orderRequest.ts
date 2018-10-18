@@ -15,7 +15,7 @@ interface DataRow {
     UrgentDeliveryDate?: Date;
 }
 export interface ItemsTypes {
-    TypeId?: number;
+    TypeId?: any;
 }
 export interface OrderRequest {
     operation?: string,

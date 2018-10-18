@@ -106,6 +106,7 @@ export class OrderPage implements OnInit {
       this.orderRequest.Datarow = this.navParams.data.data;
       this.orderRequest.Datarow.SalesManID = this.navParams.data.data.SalesManID;
       this.orderRequest.Datarow.BranchID = this.navParams.data.data.BranchID;
+      this.orderRequest.operation = "save";
       this.getService.GetCustomerByCode(this.orderRequest.Datarow.CustomerID).subscribe(res => {
         this.customer = res;
         this.CustomerAdded = true
@@ -379,14 +380,9 @@ export class OrderPage implements OnInit {
     });
   }
   remove_duplicates(arr) {
-    for (let i = 0; i < arr.length - 1; i++) {
-      if (arr[i] == arr[i + 1]) {
-        arr.splice(i, 1);
-        i--;
-      }
-    }
+    const types = Array.from(new Set(arr));
     let orderTypes: ItemsTypes[] = [];
-    arr.forEach(element => {
+    types.forEach(element => {
       if (element != 0) {
         orderTypes.push({ TypeId: element });
       }

@@ -14,10 +14,10 @@ import { GetService } from '../../shared/getServices';
 export class SearchOrdersPage implements OnInit {
 
   customers: CustomerDTO[];
-  customer: CustomerDTO;
+  customer: CustomerDTO; 
   customersNames: string[];
   findOrderOption: any = 'code';
-  searchValue: string = '50162';
+  searchValue: string = '50169';
   searchName: string;
   showSpinner: boolean = false;
   GetCustomer: any; 

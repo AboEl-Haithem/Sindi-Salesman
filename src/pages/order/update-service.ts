@@ -22,7 +22,6 @@ export class UpdateService {
     piecePromotions: CalcPromotion[] = [];
 
     fetchItems(items: OrderItem[]) {
-        console.log('items', items);
         let tempValue = [];
         let tempValueFiltered = [];
         let tempValueIds = [];
@@ -60,10 +59,10 @@ export class UpdateService {
         tempPiece.forEach(item => {
             tempPieceIds.push(item.PromotionSubId);
         });
-
         let filteredValIds = this.remove_duplicated(tempValueIds);
         let filteredPieceIds = this.remove_duplicated(tempPieceIds);
         let filteredPercIds = this.remove_duplicated(tempPercentageIds);
+
         filteredValIds.forEach(id => {
             tempValueFiltered = [];
             tempValue.forEach(item => {
@@ -84,7 +83,7 @@ export class UpdateService {
                     tempPieceFiltered.push(item);
                 }
             });
-            this.pieceArray.push(tempValueFiltered);
+            this.pieceArray.push(tempPieceFiltered);
             for (let i = 0; i < this.pieceArray.length; i++) {
                 this.piecePromotions[i] = { items: [] };
                 this.piecePromotions[i].items = this.pieceArray[i];
@@ -115,7 +114,7 @@ export class UpdateService {
             });
             this.piecePromotions[i].totalPrice = this.piecePromotions[i].items[0].PromotionTotalPrice;
         }
-        for (let i = 0; i < this.percentagePromotions.length; i++) { 
+        for (let i = 0; i < this.percentagePromotions.length; i++) {
             this.getService.getPromotionById(this.percentagePromotions[i].items[0].PromotionID).subscribe(resp => {
                 this.percentagePromotions[i].promotion = resp;
             });
@@ -142,16 +141,7 @@ export class UpdateService {
         });
     }
     remove_duplicated(arr) {
-        for (let i = 0; i < arr.length - 1; i++) {
-            if (arr[i] == arr[i + 1]) {
-                arr.splice(i, 1);
-                i--;
-            }
-        }
-        let orderTypes: ItemsTypes[] = [];
-        arr.forEach(element => {
-            orderTypes.push(element);
-        });
+        const orderTypes = Array.from(new Set(arr));
         return orderTypes;
     }
 }
