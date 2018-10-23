@@ -37,13 +37,13 @@
     </ion-item> 
   </div>
   <div *ngIf="findCustomerOption === 'code' || findCustomerOption === 'mob'">
-    <button ion-button full type="button" color="default" [disabled]="searchValue == ''" (click)="submitSearch()">بحث</button>
+    <button ion-button round full type="button" color="default" [disabled]="searchValue == ''" (click)="submitSearch()">بحث</button>
   </div>
   <ion-card *ngIf="viewCustomerDetails">
     <ion-card-header>
       بيانات العميل
     </ion-card-header>
-    <ion-card-content>
+    <ion-card-content padding>
       <ion-row>
         <ion-col col-12>
           <span>اسم العميل:</span>
@@ -71,7 +71,7 @@
   </ion-card>
 </ion-content>
 <ion-footer>
-  <button ion-button full type="button" color="default" *ngIf="viewCustomerDetails" (click)="saveCustomer()">حفظ</button>
-  <button ion-button full type="button" color="default" *ngIf="!viewCustomerDetails" (click)="addNewCustomer()">إضافة عميل جديد</button>
-  <button ion-button full type="button" color="danger" (click)="dismiss()">إلغاء</button>
+  <button ion-button round full type="button" color="default" *ngIf="viewCustomerDetails" (click)="saveCustomer()">حفظ</button>
+  <button ion-button round full type="button" color="default" *ngIf="!viewCustomerDetails" (click)="addNewCustomer()">إضافة عميل جديد</button>
+  <button ion-button round full type="button" color="danger" (click)="dismiss()">إلغاء</button>
 </ion-footer>

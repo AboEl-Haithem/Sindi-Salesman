@@ -4,7 +4,7 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  <button ion-button full type="button" color="default" *ngIf="!CustomerAdded" (click)="searchForCustomer()">أضف عميل</button>
+  <button ion-button full round type="button" color="default" *ngIf="!CustomerAdded" (click)="searchForCustomer()">أضف عميل</button>
   <ion-card *ngIf="CustomerAdded">
     <ion-card-header>
       بيانات العميل
@@ -35,8 +35,8 @@
     </ion-card-content>
 
   </ion-card>
-  <button ion-button full type="button" color="default" (click)="onAddDesign()" *ngIf="CustomerAdded">أضف تصميم</button>
-  <button ion-button full type="button" color="default" (click)="onAddPromotion()" *ngIf="CustomerAdded">أضف عرض</button>
+  <button ion-button full round type="button" color="default" (click)="onAddDesign()" *ngIf="CustomerAdded">أضف تصميم</button>
+  <button ion-button full round type="button" color="default" (click)="onAddPromotion()" *ngIf="CustomerAdded">أضف عرض</button>
 
   <ion-card *ngIf="singleItems.length > 0">
     <ion-card-header>
@@ -211,15 +211,15 @@
         <ion-textarea [(ngModel)]="orderRequest.Datarow.ReceivingNotes" placeholder="الملاحظات" *ngIf="orderRequest.Datarow.ReceivingBranch == 0"></ion-textarea>
       </ion-col>
       <ion-col col-6 style="padding: 1px;">
-        <button ion-button block type="button" [disabled]="saveDisable" color="default" *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0"
+        <button ion-button block round type="button" [disabled]="saveDisable" color="default" *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0"
           (click)="saveOrder()">حفظ</button>
       </ion-col>
       <ion-col col-6 style="padding: 1px;">
-        <button ion-button block type="button" [disabled]="saveDisable" color="default" *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0"
+        <button ion-button round block type="button" [disabled]="saveDisable" color="default" *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0"
           (click)="saveOrder('park')">تأجيل</button>
       </ion-col>
       <ion-col col-12 style="padding: 1px;">
-        <button ion-button full type="button" color="danger" (click)="onDismiss()">إلغاء</button>
+        <button ion-button round full type="button" color="danger" (click)="onDismiss()">إلغاء</button>
       </ion-col>
     </ion-row>
   </ion-grid>

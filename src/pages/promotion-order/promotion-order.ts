@@ -121,6 +121,7 @@ export class PromotionOrderPage {
       });
       if (this.subTotal > this.promotion.PromotionFixedPrice) {
         // CALCULATE ITEMS PRICES//
+        debugger;
         let total: number = 0;
         let percentage: number = 0;
         this.selectedItems.forEach(item => {

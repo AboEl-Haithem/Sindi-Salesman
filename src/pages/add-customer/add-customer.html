@@ -30,8 +30,8 @@
             <ion-datetime displayFormat="MMM DD YYYY" doneText="تم" cancelText="إلغاء"
              [(ngModel)]="addCustomerForm.BirthDate" formControlName="BirthDate"></ion-datetime>
           </ion-item>
-          <button ion-button full type="submit" [disabled]="!addCustomerForm.valid" style="margin-bottom: 20px">إضافة عميل</button>
-          <button ion-button full type="button" color="danger" (click)="dismiss()">إلغاء</button>
+          <button ion-button round full type="submit" [disabled]="!addCustomerForm.valid" style="margin-bottom: 20px">إضافة عميل</button>
+          <button ion-button round full type="button" color="danger" (click)="dismiss()">إلغاء</button>
         </form>
     </div>
   </div>
