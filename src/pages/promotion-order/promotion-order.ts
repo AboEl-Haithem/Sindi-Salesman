@@ -128,7 +128,7 @@ export class PromotionOrderPage {
         });
         percentage = (total - (this.promotion.PromotionFixedPrice - this.promotion.PromotionTotalPrice)) / total;
         this.selectedItems.forEach(item => {
-          item.PromotionPrice = ((item.HigherPrice * percentage) + item.UrgentCost + item.LogoPrice) * item.Count;
+          item.PromotionPrice = ((item.ItemPrice * percentage) + item.UrgentCost + item.LogoPrice) * item.Count;
         });
         this.disableSaveBtn = false;
         this.promotionTotalPrice = this.subTotal - this.promotion.PromotionTotalPrice;
