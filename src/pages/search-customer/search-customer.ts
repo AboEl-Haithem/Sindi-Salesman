@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingController, ToastController } from 'ionic-angular';
-
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { CustomerDTO } from '../../shared/customerDTO';
 
 import { GetService } from '../../shared/getServices';
@@ -16,16 +16,25 @@ export class SearchCustomerPage {
   customer: CustomerDTO;
   customersNames: string[];
   findCustomerOption: any = 'mob';
-  searchValue: string = '+966';
-  countryCode: string = '+966';
   searchName: string;
   viewCustomerDetails: boolean = false;
   showSpinner: boolean = false;
   GetCustomer: any;
 
+  searchCustomerByCode: FormGroup;
+  searchCustomerByPhone: FormGroup;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
     private getServices: GetService, public errorMessage: ErrorMessage, public loadingCtrl: LoadingController
-    , public ToastCtrl: ToastController) {
+    , public ToastCtrl: ToastController, private formBuilder: FormBuilder) {
+
+      this.searchCustomerByCode = this.formBuilder.group({
+        CardCode: [null, Validators.required]
+      });
+
+      this.searchCustomerByPhone = this.formBuilder.group({
+        CardPhone: ['+966', Validators.required],
+      });
   }
 
   getCutomersByName(ev: any) {
@@ -81,7 +90,6 @@ export class SearchCustomerPage {
     this.customer = {};
     this.viewCustomerDetails = false;
     this.searchName = "";
-    this.searchValue = "";
   }
   dismiss() {
     this.viewCtrl.dismiss();
@@ -93,71 +101,64 @@ export class SearchCustomerPage {
     this.viewCtrl.dismiss(data);
   }
 
-  submitSearch() {
+  onSearchByPhone() {
     let loader = this.loadingCtrl.create();
     loader.present();
-    switch (this.findCustomerOption) {
-      case 'mob': {
-        this.getServices.getCustomerByPhone(parseInt(this.searchValue)).subscribe(response => {
-          if (response.Response) {
-            loader.dismiss();
-            this.showError();
-          } else if(response.Availability == 'Not Exist') {
-            loader.dismiss();
-              let toast = this.ToastCtrl.create({
-                message: 'هذا الرقم غير موجود!',
-                position: "middle",
-                showCloseButton: false,
-                duration: 2000,
-                dismissOnPageChange: true
-              });
-              toast.present();
-          } else {
-            this.viewCustomerDetails = true;
-            this.customer = response;
-            /*this.customer.BirthDate = this.convertDate(this.customer.BirthDate);*/
-            this.saveCustomer();
-            loader.dismiss();
-          }
-        }, err => {
-          loader.dismiss();
-          this.showError();
-        });
-        break;
+    this.getServices.getCustomerByPhone(parseInt(this.searchCustomerByPhone.controls.CardPhone.value)).subscribe(response => {
+      if (response.Response) {
+        loader.dismiss();
+        this.showError();
+      } else if(response.Availability == 'Not Exist') {
+        loader.dismiss();
+          let toast = this.ToastCtrl.create({
+            message: 'هذا الرقم غير موجود!',
+            position: "middle",
+            showCloseButton: false,
+            duration: 2000,
+            dismissOnPageChange: true
+          });
+          toast.present();
+      } else {
+        this.viewCustomerDetails = true;
+        this.customer = response;
+        this.saveCustomer();
+        loader.dismiss();
       }
-      case 'code': {
-        this.getServices.GetCustomerByCode(this.searchValue).subscribe(response => {
-          if (response.Response) {
-            loader.dismiss();
-            this.showError();
-          } else if(response.Availability == 'Not Exist') {
-            loader.dismiss();
-              let toast = this.ToastCtrl.create({
-                message: 'هذا الكود غير موجود!',
-                position: "middle",
-                showCloseButton: false,
-                duration: 2000,
-                dismissOnPageChange: true
-              });
-              toast.present();
-          } else {
-            this.viewCustomerDetails = true;
-            this.customer = response;
-            /*this.customer.BirthDate = this.convertDate(this.customer.BirthDate);*/
-            this.saveCustomer();
-            loader.dismiss();
-          }
-        }, err => {
-          loader.dismiss();
-          this.showError();
-        });
-        break;
+    }, err => {
+      loader.dismiss();
+      this.showError();
+    });
+  }  
+
+  onSearchByCode() {
+    let loader = this.loadingCtrl.create();
+    loader.present();
+    this.getServices.GetCustomerByCode(this.searchCustomerByCode.controls.CardCode.value).subscribe(response => {
+      if (response.Response) {
+        loader.dismiss();
+        this.showError();
+      } else if(response.Availability == 'Not Exist') {
+        loader.dismiss();
+          let toast = this.ToastCtrl.create({
+            message: 'هذا الكود غير موجود!',
+            position: "middle",
+            showCloseButton: false,
+            duration: 2000,
+            dismissOnPageChange: true
+          });
+          toast.present();
+      } else {
+        this.viewCustomerDetails = true;
+        this.customer = response;
+        this.saveCustomer();
+        loader.dismiss();
       }
-      default: {
-        break;
-      }
-    }
+    }, err => {
+      loader.dismiss();
+      this.showError();
+    });
   }
+
   convertDate(bDate) {
     let dateString = bDate.substr(6);
     let currentTime = new Date(parseInt(dateString));

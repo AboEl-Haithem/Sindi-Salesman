@@ -13,7 +13,7 @@ import { CustomerDTO } from '../../shared/customerDTO';
 export class AddCustomerPage {
 
   customer: CustomerDTO;
-  private addCustomerForm: FormGroup
+  addCustomerForm: FormGroup
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private formBuilder: FormBuilder,
     public viewCtrl: ViewController, private postService: PostService, public loadingCtrl: LoadingController,

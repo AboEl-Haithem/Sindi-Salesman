@@ -40,26 +40,27 @@
       </ion-list>
     </ion-item>
   </div>
-  <div *ngIf="findOrderOption == 'code'">
+  <form [formGroup]="searchOrderByCode" (ngSubmit)="submitSearch()" *ngIf="findOrderOption === 'code'">
     <ion-item>
-      <ion-label>كود الفاتورة</ion-label>
-      <ion-input type="text" [(ngModel)]="searchValue"></ion-input>
+      <ion-label>كود العميل</ion-label>
+      <ion-input type="text" formControlName="CardCode"></ion-input>
     </ion-item>
-  </div>
-  <div *ngIf="findOrderOption == 'phone'">
-    <ion-item> 
+    <button ion-button round full type="submit" color="default" [disabled]="!searchOrderByCode.valid" >بحث</button>
+  </form>
+  <form [formGroup]="searchOrderByPhone" (ngSubmit)="submitSearch()" *ngIf="findOrderOption === 'phone'">
+    <ion-item>
       <ion-label>رقم الجوال</ion-label>
-      <ion-input type="tel" [(ngModel)]="searchValue"></ion-input>
-      <!-- <ion-input class="code" type="tel" [(ngModel)]="countryCode"></ion-input> -->
-    </ion-item> 
-  </div>
+      <ion-input type="tel" formControlName="CardPhone" minlength="13" maxlength="13"></ion-input>
+    </ion-item>
+    <button ion-button round full type="submit" color="default" [disabled]="!searchOrderByPhone.valid">بحث</button>
+  </form>
   <div *ngIf="findOrderOption == 'date'">
     <ion-item>
       <ion-label>تاريخ الميلاد</ion-label>
       <ion-datetime displayFormat="MMM DD YYYY" doneText="تم" cancelText="إلغاء" [(ngModel)]="searchValue"></ion-datetime>
     </ion-item>
   </div>
-  <div *ngIf="findOrderOption == 'code' || findOrderOption == 'phone' || findOrderOption == 'date'">
+  <div *ngIf="findOrderOption == 'date'">
     <button ion-button round full type="button" color="default" [disabled]="searchValue == ''" (click)="submitSearch()">بحث</button>
   </div>
   <h6 *ngIf= "emptySearch" style="text-align: center; color: gray;">لا توجد فواتير!</h6>

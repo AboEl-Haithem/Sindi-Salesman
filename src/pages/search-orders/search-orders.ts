@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingController, ToastController, ModalController } from 'ionic-angular';
-
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { OrderPage } from '../order/order';
 
 import { CustomerDTO } from '../../shared/customerDTO';
@@ -17,18 +17,28 @@ export class SearchOrdersPage implements OnInit {
   customer: CustomerDTO; 
   customersNames: string[];
   findOrderOption: any = 'code';
-  searchValue: string = '50169';
+  searchValue: string;
   searchName: string;
   showSpinner: boolean = false;
   GetCustomer: any; 
   searchMode: string = '3';
   orders: any[] = [];
-  countryCode: string = '+966';
   emptySearch = false;
+
+  searchOrderByCode: FormGroup;
+  searchOrderByPhone: FormGroup;
   
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
-    private getServices: GetService, public loadingCtrl: LoadingController
+    private getServices: GetService, public loadingCtrl: LoadingController, private formBuilder: FormBuilder
     , public ToastCtrl: ToastController, public modalCtrl: ModalController) {
+
+      this.searchOrderByCode = this.formBuilder.group({
+        CardCode: [null, Validators.required]
+      });
+
+      this.searchOrderByPhone = this.formBuilder.group({
+        CardPhone: ['+966', Validators.required],
+      });
   }
 
   ngOnInit() {
@@ -88,7 +98,9 @@ export class SearchOrdersPage implements OnInit {
     loader.present();
     let value;
     if (this.findOrderOption == 'phone') {
-      value = parseInt(this.searchValue);
+      value = parseInt(this.searchOrderByPhone.controls.CardPhone.value);
+    } else if (this.findOrderOption == 'code') {
+      value = this.searchOrderByCode.controls.CardCode.value;
     } else {
       value = this.searchValue
     }
