@@ -39,18 +39,21 @@ export class AddCustomerPage {
         this.customer.CardCode = response.CardCode;
         loader.dismiss();
         this.viewCtrl.dismiss(this.customer);
+      } else if (response == "Exist") {
+        loader.dismiss();
+        this.showError('رقم الجوال موجود بالفعل');
       } else {
         loader.dismiss();
-        this.showError();
+        this.showError('حدث خطأ، رجاء أعد المحاولة لاحقا');
       }
     }, err => {
       loader.dismiss();
-      this.showError();
+      this.showError('حدث خطأ، رجاء أعد المحاولة لاحقا');
     });
   }
-  showError() {
+  showError(msg) {
     let toast = this.ToastCtrl.create({
-      message: 'حدث خطأ، رجاء أعد المحاولة لاحقا',
+      message: msg,
       position: "middle",
       showCloseButton: false,
       duration: 2000,

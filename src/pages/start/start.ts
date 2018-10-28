@@ -7,6 +7,7 @@ import { OrderPage } from '../order/order';
 import { PromotionsPage } from '../promotions/promotions';
 import { SearchOrdersPage } from '../search-orders/search-orders';
 
+
 @IonicPage()
 @Component({
   selector: 'page-start',

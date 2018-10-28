@@ -7,4 +7,5 @@ export interface ItemDTO {
     ItemType?: string;
     LogoCode?: string;
     SecondryFabricID?: string;
+    ItmsGrpCod?: number;
 }

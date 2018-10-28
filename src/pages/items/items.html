@@ -28,6 +28,7 @@
           <p class="item-title">{{item.ItemName}}</p>
           <h5>{{item.ItemCode}}</h5>
           <ion-badge>{{item.Price}} ريال</ion-badge>
+          <i *ngIf="item.ItmsGrpCod == 104" class="fas fa-tshirt"></i>
         </ion-item>
       </ion-list>
     </ion-card-content>

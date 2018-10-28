@@ -116,7 +116,6 @@ export class SearchOrdersPage implements OnInit {
     });
   }
   viewOrder(i) {
-    if (this.orders[i].Edittable) {
       let data = {
         mode: 'edit',
         id: this.orders[i].SalesOrderID,
@@ -124,7 +123,6 @@ export class SearchOrdersPage implements OnInit {
       }
       let modal = this.modalCtrl.create(OrderPage, data);
       modal.present();
-    }
   }
   showError() {
     let toast = this.ToastCtrl.create({

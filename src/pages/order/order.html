@@ -15,19 +15,19 @@
           <span>اسم العميل:</span>
           <span>{{customer.CardName}}</span>
         </ion-col>
-        <ion-col col-12 *ngIf="customer.Phone1 != null">
+        <ion-col col-12 *ngIf="customer.Phone1 != null && customer.Phone1 != ''">
           <span>رقم الجوال:</span>
           <span>{{customer.Phone1}}</span>
         </ion-col>
-        <ion-col col-12 *ngIf="customer.E_Mail != null">
+        <ion-col col-12 *ngIf="customer.E_Mail != null && customer.E_Mail != ''">
           <span>البريد الالكتروني:</span>
           <span>{{customer.E_Mail}}</span>
         </ion-col>
-        <ion-col col-12 *ngIf="customer.BirthDate != null">
+        <ion-col col-12 *ngIf="customer.BirthDate != null && customer.BirthDate != ''">
           <span>تاريخ الميلاد:</span>
-          <span>{{customer.BirthDate}}</span>
+          <span>{{customer.BirthDate | date: 'dd-MM-yyyy'}}</span>
         </ion-col>
-        <ion-col col-12 *ngIf="customer.Address != null">
+        <ion-col col-12 *ngIf="customer.Address != null && customer.Address != ''">
           <span>العنوان:</span>
           <span>{{customer.Address}}</span>
         </ion-col>
@@ -211,11 +211,11 @@
         <ion-textarea [(ngModel)]="orderRequest.Datarow.ReceivingNotes" placeholder="الملاحظات" *ngIf="orderRequest.Datarow.ReceivingBranch == 0"></ion-textarea>
       </ion-col>
       <ion-col col-6 style="padding: 1px;">
-        <button ion-button block round type="button" [disabled]="saveDisable" color="default" *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0"
+        <button ion-button block round type="button" [disabled]="disableSave" color="default" *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0"
           (click)="saveOrder()">حفظ</button>
       </ion-col>
       <ion-col col-6 style="padding: 1px;">
-        <button ion-button round block type="button" [disabled]="saveDisable" color="default" *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0"
+        <button ion-button round block type="button" [disabled]="disableSave" color="default" *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0"
           (click)="saveOrder('park')">تأجيل</button>
       </ion-col>
       <ion-col col-12 style="padding: 1px;">

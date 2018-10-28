@@ -61,6 +61,7 @@ export class OrderPage implements OnInit {
   pieceArray: any[] = [];
   piecePromotions: CalcPromotion[] = [];
   saveDisable = false;
+  disableSave = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,
     public viewCtrl: ViewController, public alertCtrl: AlertController, private storage: Storage,
@@ -103,6 +104,9 @@ export class OrderPage implements OnInit {
     }
     ////////////////// EDIT More////////////////////    
     else if (this.navParams.data.mode == 'edit') {
+      if (!this.navParams.data.data.Edittable) {
+        this.disableSave = true;
+      }
       this.orderRequest.Datarow = this.navParams.data.data;
       this.orderRequest.Datarow.SalesManID = this.navParams.data.data.SalesManID;
       this.orderRequest.Datarow.BranchID = this.navParams.data.data.BranchID;
@@ -297,6 +301,7 @@ export class OrderPage implements OnInit {
   //////////////Edit percentage promotion////////////////
   saveOrder(mode?) {
     this.saveDisable = true;
+    this.disableSave = true;
     if (mode == 'park') {
       this.orderRequest.Datarow.Park = true;
     }
@@ -473,11 +478,12 @@ export class OrderPage implements OnInit {
     });
     toast.onDidDismiss(() => {
       this.saveDisable = false;
+      this.disableSave = false;
     });
     toast.present();
   }
   onDismiss() {
-    if (this.singleItems.length > 0 || this.percentageArray.length > 0 || this.pieceArray.length > 0 || this.valueArray.length > 0) {
+    if ((this.singleItems.length > 0 || this.percentageArray.length > 0 || this.pieceArray.length > 0 || this.valueArray.length > 0) && !this.disableSave) {
       let confirm = this.alertCtrl.create({
         title: 'إلغاء الطلب',
         message: 'تأكيد إلغاء الطلب',

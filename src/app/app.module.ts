@@ -22,6 +22,7 @@ import { SecondaryFabricPage } from '../pages/secondary-fabric/secondary-fabric'
 import { PromotionItemsPage } from '../pages/promotion-items/promotion-items';
 import { PromotionOrderPage } from '../pages/promotion-order/promotion-order';
 import { SearchOrdersPage } from '../pages/search-orders/search-orders';
+import { ComponentsModule } from '../components/components.module'
 
 import { PostService } from '../shared/postServices';
 import { Connection } from '../shared/connection';
@@ -53,6 +54,7 @@ import { ItemsTypes } from '../shared/items-types.pipe';
   imports: [
     HttpModule,
     BrowserModule,
+    ComponentsModule,
     IonicModule.forRoot(MyApp, {
       platforms: {
         ios: {
