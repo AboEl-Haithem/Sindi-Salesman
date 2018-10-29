@@ -83,6 +83,7 @@ export class ItemPage implements OnInit {
         this.orderItem.ItemCode = this.itemDTO.ItemCode;
         this.orderItem.ItemName = this.itemDTO.ItemName;
         this.orderItem.ItemPrice = this.itemDTO.Price;
+        this.orderItem.ItmsGrpCod = this.itemDTO.ItmsGrpCod;
 
         //////////////////////init logos////////////////////////
         if (this.itemDTO.LogoCode != null) {

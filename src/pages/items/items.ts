@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, LoadingController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, LoadingController, ToastController, Item } from 'ionic-angular';
 
 import { ItemPage } from '../item/item';
 
@@ -55,9 +55,17 @@ export class ItemsPage implements OnInit {
     }
   }
   viewItem(i) {
-    let data = {
-      itemSelected: true,
-      id: this.items[i].ItemCode
+    let data;
+    if (this.items[i].ItmsGrpCod == 104) {
+      data = {
+        mainItemSelected: true,
+        id: this.items[i].ItemCode
+      }
+    } else {
+      data = {
+        mainItemSelected: false,
+        item: this.items[i]
+      }
     }
     this.viewCtrl.dismiss(data);
   }

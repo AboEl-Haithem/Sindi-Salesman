@@ -3,6 +3,7 @@ export interface OrderItem {
     ItemType?: number;
     ItemName?: string;
     ItemPrice?: number;
+    ItmsGrpCod?: number;
 
     FabricId?: string;
     FabricName?: string
@@ -34,6 +35,4 @@ export interface OrderItem {
     promotionSubID?: number;
     PromotionPrice?: number;
     PromotionTotalPrice?: number;
-
-
 }

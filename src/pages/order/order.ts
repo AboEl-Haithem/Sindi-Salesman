@@ -168,8 +168,20 @@ export class OrderPage implements OnInit {
   onAddDesign() {
     let modal = this.modalCtrl.create(ItemsPage);
     modal.onDidDismiss(data => {
-      if (data && data.itemSelected === true) {
+      if (data && data.mainItemSelected === true) {
         this.onAddItem(data.id);
+      } else if (data && data.mainItemSelected === false) {
+        console.log('item', data.item);
+        this.singleItems.push({
+          Count: 1,
+          HigherPrice: data.item.Price,
+          ItemCode: data.item.ItemCode,
+          piecePrice: data.item.Price,
+          ItemName: data.item.ItemName,
+          TotalPrice: data.item.Price,
+          ItmsGrpCod: data.item.ItmsGrpCod
+        });
+        this.singleItemsTotal();
       }
     });
     modal.present();
@@ -198,28 +210,45 @@ export class OrderPage implements OnInit {
     });
   }
   itemAction(i) {
-    let actionSheet = this.actionSheetCtrl.create({
-
-      buttons: [
-        {
-          text: 'تعديل',
-          handler: () => {
-            this.editItem(i);
+    console.log('singleItems[', this.singleItems[i]);
+    let actionSheet;
+    if (this.singleItems[i].ItmsGrpCod != 0) {
+      actionSheet = this.actionSheetCtrl.create({
+        buttons: [
+          {
+            text: 'حذف',
+            handler: () => {
+              this.deleteConfirm(i);
+            }
+          },
+          {
+            text: 'إلغاء',
+            role: 'cancel'
           }
-        },
-        {
-          text: 'حذف',
-          handler: () => {
-            this.deleteConfirm(i);
+        ]
+      });
+    } else {
+      actionSheet = this.actionSheetCtrl.create({
+        buttons: [
+          {
+            text: 'تعديل',
+            handler: () => {
+              this.editItem(i);
+            }
+          },
+          {
+            text: 'حذف',
+            handler: () => {
+              this.deleteConfirm(i);
+            }
+          },
+          {
+            text: 'إلغاء',
+            role: 'cancel'
           }
-        },
-        {
-          text: 'إلغاء',
-          role: 'cancel'
-        }
-      ]
-    });
-
+        ]
+      });
+    }
     actionSheet.present();
   }
   ///////////Edit single Item/////////////

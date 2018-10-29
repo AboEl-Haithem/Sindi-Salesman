@@ -28,7 +28,7 @@
       <ion-label>كود العميل</ion-label>
       <ion-input type="text" formControlName="CardCode"></ion-input>
     </ion-item>
-    <button ion-button round full type="submit" color="default" [disabled]="!searchCustomerByCode.valid" >بحث</button>
+    <button ion-button round full type="submit" color="default" [disabled]="!searchCustomerByCode.valid">بحث</button>
   </form>
   <form [formGroup]="searchCustomerByPhone" (ngSubmit)="onSearchByPhone()" *ngIf="findCustomerOption === 'mob'">
     <ion-item>
@@ -37,40 +37,10 @@
     </ion-item>
     <button ion-button round full type="submit" color="default" [disabled]="!searchCustomerByPhone.valid">بحث</button>
   </form>
-  <ion-card *ngIf="viewCustomerDetails">
-    <ion-card-header>
-      بيانات العميل
-    </ion-card-header>
-    <ion-card-content padding>
-      <ion-row>
-        <ion-col col-12>
-          <span>اسم العميل:</span>
-          <span>{{customer.CardName}}</span>
-        </ion-col>
-        <ion-col col-12 *ngIf="customer.Phone1 !== null">
-          <span>رقم الجوال:</span>
-          <span>{{customer.Phone1}}</span>
-        </ion-col>
-        <ion-col col-12 *ngIf="customer.E_Mail !== null">
-          <span>البريد الالكتروني:</span>
-          <span>{{customer.E_Mail}}</span>
-        </ion-col>
-        <ion-col col-12 *ngIf="customer.BirthDate !== null">
-          <span>تاريخ الميلاد:</span>
-          <span>{{customer.BirthDate}}</span>
-        </ion-col>
-        <ion-col col-12 *ngIf="customer.Address !== null">
-          <span>العنوان:</span>
-          <span>{{customer.Address}}</span>
-        </ion-col>
-      </ion-row>
-    </ion-card-content>
-
-  </ion-card>
+  <customer-details *ngIf="viewCustomerDetails" [customer]="customer"></customer-details>
 </ion-content>
 <ion-footer>
   <button ion-button round full type="button" color="default" *ngIf="viewCustomerDetails" (click)="saveCustomer()">حفظ</button>
-  <button ion-button round full type="button" color="default" *ngIf="!viewCustomerDetails" (click)="addNewCustomer()">إضافة
-    عميل جديد</button>
+  <button ion-button round full type="button" color="default" *ngIf="!viewCustomerDetails" (click)="addNewCustomer()">إضافة عميل جديد</button>
   <button ion-button round full type="button" color="danger" (click)="dismiss()">إلغاء</button>
 </ion-footer>

@@ -5,36 +5,8 @@
 </ion-header>
 <ion-content padding>
   <button ion-button full round type="button" color="default" *ngIf="!CustomerAdded" (click)="searchForCustomer()">أضف عميل</button>
-  <ion-card *ngIf="CustomerAdded">
-    <ion-card-header>
-      بيانات العميل
-    </ion-card-header>
-    <ion-card-content padding>
-      <ion-row>
-        <ion-col col-12>
-          <span>اسم العميل:</span>
-          <span>{{customer.CardName}}</span>
-        </ion-col>
-        <ion-col col-12 *ngIf="customer.Phone1 != null && customer.Phone1 != ''">
-          <span>رقم الجوال:</span>
-          <span>{{customer.Phone1}}</span>
-        </ion-col>
-        <ion-col col-12 *ngIf="customer.E_Mail != null && customer.E_Mail != ''">
-          <span>البريد الالكتروني:</span>
-          <span>{{customer.E_Mail}}</span>
-        </ion-col>
-        <ion-col col-12 *ngIf="customer.BirthDate != null && customer.BirthDate != ''">
-          <span>تاريخ الميلاد:</span>
-          <span>{{customer.BirthDate | date: 'dd-MM-yyyy'}}</span>
-        </ion-col>
-        <ion-col col-12 *ngIf="customer.Address != null && customer.Address != ''">
-          <span>العنوان:</span>
-          <span>{{customer.Address}}</span>
-        </ion-col>
-      </ion-row>
-    </ion-card-content>
 
-  </ion-card>
+ <customer-details *ngIf="CustomerAdded" [customer]="customer"></customer-details>
   <button ion-button full round type="button" color="default" (click)="onAddDesign()" *ngIf="CustomerAdded">أضف تصميم</button>
   <button ion-button full round type="button" color="default" (click)="onAddPromotion()" *ngIf="CustomerAdded">أضف عرض</button>
 
