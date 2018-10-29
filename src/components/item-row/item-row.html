@@ -1,4 +1,13 @@
-<!-- Generated template for the ItemRowComponent component -->
-<div>
-  {{text}}
-</div>
+<ion-item style="border-top: 1px solid #eae8ea">
+  <ion-thumbnail item-start>
+    <img src="assets/imgs/icon.jpg">
+  </ion-thumbnail>
+  <p class="item-title">{{item.ItemName}}</p>
+  <h5>{{item.ItemCode}}</h5>
+  <ion-badge>{{item.Price}} ريال</ion-badge>
+  <ion-icon *ngIf="item.ItmsGrpCod == 111" name="custom-shirt"></ion-icon>
+  <ion-icon *ngIf="item.ItmsGrpCod == 112" name="custom-boxer"></ion-icon>
+  <ion-icon *ngIf="item.ItmsGrpCod == 113" name="custom-trouser"></ion-icon>
+  <ion-icon *ngIf="item.ItmsGrpCod == 114" name="custom-shoes"></ion-icon>
+  <ion-icon *ngIf="item.ItmsGrpCod == 115" name="custom-perfume"></ion-icon>
+</ion-item>

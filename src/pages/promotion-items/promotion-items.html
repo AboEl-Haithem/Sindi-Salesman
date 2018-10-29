@@ -29,16 +29,8 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-item style="border-top: 1px solid #eae8ea" *ngFor="let item of items; let i = index" (click)="onSelectItem(i)">
-          <ion-thumbnail item-start>
-            <img src="assets/imgs/icon.jpg">
-          </ion-thumbnail>
-          <p class="item-title">{{item.ItemName}}</p>
-          <h5>{{item.ItemCode}}</h5>
-          <ion-badge>{{item.Price}} ريال</ion-badge>
-        </ion-item>
+        <item-row *ngFor="let item of items; let i = index" (click)="onSelectItem(i)" [item]=item></item-row>
       </ion-list>
-
     </ion-card-content>
   </ion-card>
 

@@ -1,3 +1,29 @@
 item-row {
-
+    ion-icon {
+        &[class*="custom-"] {
+          mask-size: contain;
+          mask-position: 50% 50%;
+          mask-repeat: no-repeat;
+          background: currentColor;
+          width: 30px;
+          height: 30px;
+          float: left;
+        }
+      
+        &[class*="custom-boxer"] {
+          mask-image: url(../../assets/icon/boxer.svg);
+        }
+        &[class*="custom-trouser"] {
+          mask-image: url(../../assets/icon/trouser.svg);
+        }
+        &[class*="custom-shirt"] {
+          mask-image: url(../../assets/icon/shirt.svg);
+        }
+        &[class*="custom-perfume"] {
+          mask-image: url(../../assets/icon/perfume.svg);
+        }
+        &[class*="custom-shoes"] {
+          mask-image: url(../../assets/icon/shoes.svg);
+        }
+    }
 }
