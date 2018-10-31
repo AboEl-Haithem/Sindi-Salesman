@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
   IonicPage, NavController, ToastController, NavParams, AlertController,
-  ViewController, LoadingController, ModalController, ActionSheetController
+  ViewController, LoadingController, ModalController, ActionSheetController, Item
 } from 'ionic-angular';
 
 import { GetService } from '../../shared/getServices';
@@ -83,8 +83,27 @@ export class PromotionOrderPage {
     }
     let modal = this.modalCtrl.create(PromotionItemsPage, data);
     modal.onDidDismiss(data => {
-      if (data && data.add == true) {
+      if (data && data.addMain == true) {
         this.viewItem(data.id);
+      } else if (data && data.addMain == false) {
+        let item: OrderItem = {
+          Count: 1,
+          HigherPrice: data.item.Price,
+          ItemPrice: data.item.Price,
+          piecePrice: data.item.Price,
+          TotalPrice: data.item.Price,
+          ItemCode: data.item.ItemCode,
+          ItemName: data.item.ItemName,
+          Urgent: false,
+          UrgentCost: 0,
+          Prova: false,
+          LogoPrice: 0,
+          FabricPrice: 0,
+        }
+        let dta = {
+          item: item
+        }
+        this.calcPromotionPrice(dta, "add");
       }
     });
     modal.present();
@@ -104,6 +123,7 @@ export class PromotionOrderPage {
     modal.present();
   }
   calcPromotionPrice(data, mode) {
+    console.log('calcPromotionPrice', data)
     let item: OrderItem = data.item;
     item.PromotionID = this.promotion.PromotionID;
     item.PromotionTypeID = this.promotion.PromotionTypeID;

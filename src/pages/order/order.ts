@@ -212,9 +212,15 @@ export class OrderPage implements OnInit {
   itemAction(i) {
     console.log('singleItems[', this.singleItems[i]);
     let actionSheet;
-    if (this.singleItems[i].ItmsGrpCod != 0) {
+    if (this.singleItems[i].ItmsGrpCod == 104) {
       actionSheet = this.actionSheetCtrl.create({
         buttons: [
+          {
+            text: 'تعديل',
+            handler: () => {
+              this.editItem(i);
+            }
+          },
           {
             text: 'حذف',
             handler: () => {
@@ -230,12 +236,6 @@ export class OrderPage implements OnInit {
     } else {
       actionSheet = this.actionSheetCtrl.create({
         buttons: [
-          {
-            text: 'تعديل',
-            handler: () => {
-              this.editItem(i);
-            }
-          },
           {
             text: 'حذف',
             handler: () => {

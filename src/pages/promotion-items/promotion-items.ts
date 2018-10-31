@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, ToastController, NavParams, AlertController,
-  ViewController, LoadingController, ModalController, ActionSheetController } from 'ionic-angular';
+import {
+  IonicPage, NavController, ToastController, NavParams, AlertController,
+  ViewController, LoadingController, ModalController, ActionSheetController
+} from 'ionic-angular';
 
 import { ItemPage } from '../item/item';
 
@@ -58,9 +60,17 @@ export class PromotionItemsPage implements OnInit {
     }
   }
   onSelectItem(i) {
-    let data = {
-      add: true,
-      id: this.items[i].ItemCode
+    let data;
+    if (this.items[i].ItmsGrpCod == 104) {
+      data = {
+        addMain: true,
+        id: this.items[i].ItemCode
+      }
+    } else {
+      data = {
+        addMain: false,
+        item: this.items[i]
+      }
     }
     this.viewCtrl.dismiss(data);
   }
