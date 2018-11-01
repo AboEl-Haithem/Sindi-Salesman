@@ -99,6 +99,7 @@ export class PromotionOrderPage {
           Prova: false,
           LogoPrice: 0,
           FabricPrice: 0,
+          ItemType: 7
         }
         let dta = {
           item: item
@@ -236,33 +237,51 @@ export class PromotionOrderPage {
         this.disableSaveBtn = false;
         this.disableAddDesigns = true;
         this.selectedItems.sort((a, b) => a.TotalPrice - b.TotalPrice);
-        for (let i = 0; i < this.promotion.PromotionItemsToPaid; i++) {
+        for (let i = 0; i < (this.promotion.PromotionMaxItemNumber - this.promotion.PromotionItemsToPaid); i++) {
           this.selectedItems[i].PromotionPrice = 0;
         }
       }
     }
   }
   itemAction(i) {
-    let actionSheet = this.actionSheetCtrl.create({
-      buttons: [
-        {
-          text: 'تعديل',
-          handler: () => {
-            this.editItem(i);
+    let actionSheet;
+    if (this.selectedItems[i].ItmsGrpCod == 104) {
+      actionSheet = this.actionSheetCtrl.create({
+        buttons: [
+          {
+            text: 'تعديل',
+            handler: () => {
+              this.editItem(i);
+            }
+          },
+          {
+            text: 'حذف',
+            handler: () => {
+              this.deleteConfirm(i);
+            }
+          },
+          {
+            text: 'إلغاء',
+            role: 'cancel'
           }
-        },
-        {
-          text: 'حذف',
-          handler: () => {
-            this.deleteConfirm(i);
+        ]
+      });
+    } else {
+      actionSheet = this.actionSheetCtrl.create({
+        buttons: [
+          {
+            text: 'حذف',
+            handler: () => {
+              this.deleteConfirm(i);
+            }
+          },
+          {
+            text: 'إلغاء',
+            role: 'cancel'
           }
-        },
-        {
-          text: 'إلغاء',
-          role: 'cancel'
-        }
-      ]
-    });
+        ]
+      });
+    }
     actionSheet.present();
   }
   editItem(i) {
