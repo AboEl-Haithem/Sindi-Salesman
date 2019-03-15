@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { IonicStorageModule } from '@ionic/storage';
 import { HttpModule } from '@angular/http';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { HTTP } from '@ionic-native/http';
 
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
@@ -30,6 +31,7 @@ import { GetService } from '../shared/getServices';
 import { LogoTypesPage } from '../pages/logo-types/logo-types';
 import { ErrorMessage } from '../shared/errorMessage';
 import { ItemsTypes } from '../shared/items-types.pipe';
+import { LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -55,16 +57,18 @@ import { ItemsTypes } from '../shared/items-types.pipe';
     HttpModule,
     BrowserModule,
     ComponentsModule,
-    IonicModule.forRoot(MyApp, {
-      platforms: {
-        ios: {
-          backButtonIcon: 'ios-arrow-forward'
-        },
-        android: {
-          backButtonIcon: 'ios-arrow-forward'
+    IonicModule.forRoot(MyApp,
+      {
+        LocationStrategy: 'path',
+        platforms: {
+          ios: {
+            backButtonIcon: 'ios-arrow-forward'
+          },
+          android: {
+            backButtonIcon: 'ios-arrow-forward'
+          }
         }
-      }
-    }),
+      }),
     IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
@@ -88,7 +92,7 @@ import { ItemsTypes } from '../shared/items-types.pipe';
   ],
   providers: [
     StatusBar,
-    SplashScreen, BarcodeScanner,
+    SplashScreen, BarcodeScanner, HTTP,
     { provide: ErrorHandler, useClass: IonicErrorHandler }, PostService, Connection, GetService, ErrorMessage,
     Storage
   ]

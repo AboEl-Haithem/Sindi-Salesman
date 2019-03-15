@@ -4,9 +4,10 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  <button ion-button full round type="button" color="default" *ngIf="!CustomerAdded" (click)="searchForCustomer()">أضف عميل</button>
+  <button ion-button full round type="button" color="default" *ngIf="!CustomerAdded" (click)="searchForCustomer()">أضف
+    عميل</button>
 
- <customer-details *ngIf="CustomerAdded" [customer]="customer"></customer-details>
+  <customer-details *ngIf="CustomerAdded" [customer]="customer"></customer-details>
   <button ion-button full round type="button" color="default" (click)="onAddDesign()" *ngIf="CustomerAdded">أضف تصميم</button>
   <button ion-button full round type="button" color="default" (click)="onAddPromotion()" *ngIf="CustomerAdded">أضف عرض</button>
 
@@ -48,7 +49,8 @@
       عروض النسبة المئوية
     </ion-card-header>
     <ion-card-content class="promotions-card">
-      <ion-row *ngFor="let percentageObject of percentageArray; let i = index" (click)="editPromotionOrder(i, 'percentage')" class="row-border">
+      <ion-row *ngFor="let percentageObject of percentageArray; let i = index" (click)="editPromotionOrder(i, 'percentage')"
+        class="row-border">
         <ion-col col-12>
           <p style="font-weight: bold;">{{percentagePromotions[i].promotion?.Description}}</p>
         </ion-col>
@@ -174,6 +176,10 @@
   <ion-grid style="padding: 0px;">
     <ion-row>
       <ion-col col-12 *ngIf="singleItems.length > 0 || percentageArray.length > 0 || pieceArray.length > 0 || valueArray.length > 0">
+        <ion-item class="park" style="border-top: 1px solid #eae8ea;">
+          <p style="float: right; font-weight: bold;">السعر الكلى للفاتورة</p>
+          <ion-badge style="float: left">{{totalPrice | number:'1.0-2'}} ريال</ion-badge>
+        </ion-item>
         <ion-item>
           <ion-label>مكان التسليم</ion-label>
           <ion-select [(ngModel)]="orderRequest.Datarow.ReceivingBranch" interface="action-sheet">

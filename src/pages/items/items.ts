@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, LoadingController, ToastController, Item } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, LoadingController, ToastController, Item, AlertController } from 'ionic-angular';
 
 import { ItemPage } from '../item/item';
 
@@ -14,7 +14,7 @@ import { ItemDTO } from '../../shared/itemDTO';
 export class ItemsPage implements OnInit {
   items: ItemDTO[] = [];
   initializedItems: ItemDTO[] = [];
-  constructor(public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController,
+  constructor(public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController, private alertCtrl: AlertController,
     public viewCtrl: ViewController, private getServices: GetService, public ToastCtrl: ToastController) {
   }
   ngOnInit() {
@@ -61,13 +61,38 @@ export class ItemsPage implements OnInit {
         mainItemSelected: true,
         id: this.items[i].ItemCode
       }
+      this.viewCtrl.dismiss(data);
     } else {
-      data = {
-        mainItemSelected: false,
-        item: this.items[i]
-      }
+      const prompt = this.alertCtrl.create({
+        message: "عدد القطع",
+        inputs: [
+          {
+            name: 'count',
+            type: 'number'
+          },
+        ],
+        buttons: [
+          {
+            text: 'إلغاء',
+            handler: data => {
+              console.log('Cancel clicked');
+            }
+          },
+          {
+            text: 'تم',
+            handler: data => {
+              data = {
+                mainItemSelected: false,
+                count: parseInt(data.count),
+                item: this.items[i]
+              }
+              this.viewCtrl.dismiss(data);
+            }
+          }
+        ]
+      });
+      prompt.present();
     }
-    this.viewCtrl.dismiss(data);
   }
   onDismiss() {
     this.viewCtrl.dismiss();

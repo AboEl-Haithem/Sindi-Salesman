@@ -4,6 +4,7 @@ import {
   AlertController, ActionSheetController, ToastController
 } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import { HTTP } from '@ionic-native/http';
 
 import { SearchCustomerPage } from '../search-customer/search-customer';
 import { AddCustomerPage } from '../add-customer/add-customer';
@@ -22,6 +23,7 @@ import { Branches } from '../../shared/branchSettings';
 import { PostService } from '../../shared/postServices';
 import { GetService } from '../../shared/getServices';
 import { UpdateService } from './update-service';
+import { Connection } from '../../shared/connection';
 
 @IonicPage()
 @Component({
@@ -63,11 +65,13 @@ export class OrderPage implements OnInit {
   saveDisable = false;
   disableSave = false;
 
+  totalPrice?: number;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public modalCtrl: ModalController,
     public viewCtrl: ViewController, public alertCtrl: AlertController, private storage: Storage,
     private postService: PostService, public actionSheetCtrl: ActionSheetController, private getServices: GetService
     , public loadingCtrl: LoadingController, private getService: GetService, public ToastCtrl: ToastController,
-    private updateService: UpdateService) {
+    private updateService: UpdateService, private http: HTTP, private connection: Connection) {
   }
 
   ngOnInit() {
@@ -95,6 +99,8 @@ export class OrderPage implements OnInit {
         this.orderRequest.Datarow.BranchID = data;
         this.getServices.GetSettingByBranch(data).subscribe(response => {
           this.branchSettings = response;
+          this.orderRequest.Datarow.OrderDeliveryDate = this.calcDates(this.branchSettings.NumOfDeliveryDays);
+          this.orderRequest.Datarow.UrgentDeliveryDate = this.calcDates(this.branchSettings.NumOfurgentDeliveryDays);
         }, err => {
           loader.dismiss();
           this.showError();
@@ -127,6 +133,7 @@ export class OrderPage implements OnInit {
 
           this.percentagePromotions = fetchedItems.percentagePromotions;
           this.percentageArray = fetchedItems.percentageArray;
+          this.orderTotalPrice();
         }, error => {
           this.showError();
           loader.dismiss();
@@ -172,21 +179,20 @@ export class OrderPage implements OnInit {
         this.onAddItem(data.id);
       } else if (data && data.mainItemSelected === false) {
         this.singleItems.push({
-          Count: 1,
+          Count: data.count,
           HigherPrice: data.item.Price,
           ItemCode: data.item.ItemCode,
           piecePrice: data.item.Price,
           ItemName: data.item.ItemName,
-          TotalPrice: data.item.Price,
+          TotalPrice: data.item.Price * data.count,
           ItmsGrpCod: data.item.ItmsGrpCod,
           ItemType: 7
         });
-        this.singleItemsTotal();
+        this.orderTotalPrice();
       }
     });
     modal.present();
   }
-
   onAddItem(id) {
     let data = {
       add: true,
@@ -196,7 +202,7 @@ export class OrderPage implements OnInit {
     modal.onDidDismiss(data => {
       if (data) {
         this.singleItems.push(data.item);
-        this.singleItemsTotal();
+        this.orderTotalPrice();
       } else {
         this.onAddDesign();
       }
@@ -208,6 +214,20 @@ export class OrderPage implements OnInit {
     this.singleItems.forEach(item => {
       this.singleItemsPrice += item.TotalPrice;
     });
+  }
+  orderTotalPrice() {
+    this.singleItemsTotal();
+    this.totalPrice = 0;
+    this.percentagePromotions.forEach(promotion => {
+      this.totalPrice += promotion.totalPrice;
+    });
+    this.valuePromotions.forEach(promotion => {
+      this.totalPrice += promotion.totalPrice;
+    });
+    this.piecePromotions.forEach(promotion => {
+      this.totalPrice += promotion.totalPrice;
+    });
+    this.totalPrice += this.singleItemsPrice;
   }
   itemAction(i) {
     let actionSheet;
@@ -255,14 +275,16 @@ export class OrderPage implements OnInit {
     let data = {
       edit: true,
       list: 0,
-      item: this.singleItems[i]
+      item: this.singleItems[i],
+      deliveryDate: this.orderRequest.Datarow.OrderDeliveryDate,
+      urgentDeliveryDate: this.orderRequest.Datarow.UrgentDeliveryDate,
     }
     let modal = this.modalCtrl.create(ItemPage, data);
     modal.onDidDismiss(data => {
       if (data) {
         this.singleItems.splice(i, 1);
         this.singleItems.push(data.item);
-        this.singleItemsTotal();
+        this.orderTotalPrice();
       }
     });
     modal.present();
@@ -276,7 +298,9 @@ export class OrderPage implements OnInit {
           mode: 'edit',
           Promotion: this.percentagePromotions[i].promotion,
           items: this.percentagePromotions[i].items,
-          totalPrice: this.percentagePromotions[i].totalPrice
+          totalPrice: this.percentagePromotions[i].totalPrice,
+          deliveryDate: this.orderRequest.Datarow.OrderDeliveryDate,
+          urgentDeliveryDate: this.orderRequest.Datarow.UrgentDeliveryDate,
         }
         break;
       }
@@ -285,7 +309,9 @@ export class OrderPage implements OnInit {
           mode: 'edit',
           Promotion: this.valuePromotions[i].promotion,
           items: this.valuePromotions[i].items,
-          totalPrice: this.valuePromotions[i].totalPrice
+          totalPrice: this.valuePromotions[i].totalPrice,
+          deliveryDate: this.orderRequest.Datarow.OrderDeliveryDate,
+          urgentDeliveryDate: this.orderRequest.Datarow.UrgentDeliveryDate,
         }
         break;
       }
@@ -294,7 +320,9 @@ export class OrderPage implements OnInit {
           mode: 'edit',
           Promotion: this.piecePromotions[i].promotion,
           items: this.piecePromotions[i].items,
-          totalPrice: this.piecePromotions[i].totalPrice
+          totalPrice: this.piecePromotions[i].totalPrice,
+          deliveryDate: this.orderRequest.Datarow.OrderDeliveryDate,
+          urgentDeliveryDate: this.orderRequest.Datarow.UrgentDeliveryDate,
         }
         break;
       }
@@ -302,7 +330,6 @@ export class OrderPage implements OnInit {
         break;
       }
     }
-
     let modal = this.modalCtrl.create(PromotionOrderPage, data);
     modal.onDidDismiss(response => {
       if (response) {
@@ -322,6 +349,7 @@ export class OrderPage implements OnInit {
           this.piecePromotions.push(response);
           this.pieceArray.push(response.items);
         }
+        this.orderTotalPrice();
       }
     });
     modal.present();
@@ -332,6 +360,8 @@ export class OrderPage implements OnInit {
     this.disableSave = true;
     if (mode == 'park') {
       this.orderRequest.Datarow.Park = true;
+    } else {
+      this.orderRequest.Datarow.Park = false;
     }
     let loader = this.loadingCtrl.create({
       cssClass: 'transperant_loader'
@@ -375,22 +405,17 @@ export class OrderPage implements OnInit {
         this.isUrgent = true;
       }
     })
-    this.orderRequest.Datarow.OrderDeliveryDate = this.calcDates(this.branchSettings.NumOfDeliveryDays);
-    if (this.isUrgent) {
-      this.orderRequest.Datarow.UrgentDeliveryDate = this.calcDates(this.branchSettings.NumOfurgentDeliveryDays);
-    }
     this.orderRequest.ListDataRow2 = this.orderList;
     let types: number[] = [];
     this.orderList.forEach(element => {
       types.push(element.ItemType);
     });
     this.orderRequest.Order_Type = this.remove_duplicates(types);
-    console.log(this.orderRequest);
-    this.postService.orderRequest(this.orderRequest).subscribe(response => {
-      if (response && response.SalesOrderID) {
+    this.postService.orderRequest(this.orderRequest).subscribe(res => {
+      if (res && res.SalesOrderID) {
         let alert = this.alertCtrl.create({
           title: 'تم حفظ  الفاتورة',
-          message: 'رقم الفاتورة ' + response.SalesOrderID,
+          message: 'رقم الفاتورة ' + res.SalesOrderID,
           buttons: [
             {
               text: 'تم',
@@ -408,9 +433,43 @@ export class OrderPage implements OnInit {
         loader.dismiss();
       }
     }, err => {
-      this.toaster('حدث خطأ, رجاء إعادة المحاولة', false);
+      console.log(err);
+      this.toaster('حدث خطأ, رجاء إعادة المحاولة.', false);
       loader.dismiss();
     });
+    /* this.http.setDataSerializer("json");
+    this.http.post(`${this.connection.baseUrl}/Promotions/saveOrder`, this.orderRequest, {
+      "content-type": "application/json",
+      "Accept": 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS'
+    }).then(data => {
+      let resp = JSON.parse(data.data);
+      if (data && resp.SalesOrderID) {
+        let alert = this.alertCtrl.create({
+          title: 'تم حفظ  الفاتورة',
+          message: 'رقم الفاتورة ' + resp.SalesOrderID,
+          buttons: [
+            {
+              text: 'تم',
+              role: 'cancel',
+              handler: () => {
+                this.viewCtrl.dismiss()
+              }
+            }
+          ]
+        });
+        alert.present();
+        loader.dismiss();
+      } else {
+        this.toaster('حدث خطأ, رجاء إعادة المحاولة', false);
+        loader.dismiss(); 
+      }
+    }).catch(err => {
+      this.toaster('حدث خطأ, رجاء إعادة المحاولة', false);
+      loader.dismiss();
+    });*/
   }
   remove_duplicates(arr) {
     const types = Array.from(new Set(arr));
@@ -456,6 +515,7 @@ export class OrderPage implements OnInit {
           this.piecePromotions.push(data);
           this.pieceArray.push(data.items);
         }
+        this.orderTotalPrice();
       }
     });
     modal.present();
@@ -476,7 +536,7 @@ export class OrderPage implements OnInit {
           text: 'تأكيد',
           handler: () => {
             this.singleItems.splice(i, 1);
-            this.singleItemsTotal();
+            this.orderTotalPrice();
           }
         }
       ]

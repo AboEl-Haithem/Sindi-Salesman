@@ -4,7 +4,7 @@ import {
   ModalController, LoadingController, ToastController
 } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-// import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 import { FabricTypesPage } from '../fabric-types/fabric-types';
 import { LogoTypesPage } from '../logo-types/logo-types';
@@ -53,7 +53,7 @@ export class ItemPage implements OnInit {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
     private getServices: GetService, private storage: Storage, public modalCtrl: ModalController
-    , public loadingCtrl: LoadingController, public ToastCtrl: ToastController) {
+    , public loadingCtrl: LoadingController, public ToastCtrl: ToastController, public barcodeScanner: BarcodeScanner) {
 
   }
   ngOnInit() {
@@ -65,8 +65,7 @@ export class ItemPage implements OnInit {
     }
     if (this.navParams.data.promotion && (
       (this.navParams.data.promotion.PromotionTypeID == 1 && this.navParams.data.promotion.PromotionItemNumber != null) ||
-      (this.navParams.data.promotion.PromotionTypeID == 3 && this.navParams.data.promotion.PromotionFreeItemNumber == null) ||
-      (this.navParams.data.promotion.PromotionTypeID == 3 && this.navParams.data.promotion.PromotionFreeItemNumber != null)
+      (this.navParams.data.promotion.PromotionTypeID == 3)
     )) {
       this.showCounter = false;
     }
@@ -114,7 +113,7 @@ export class ItemPage implements OnInit {
         } else {
           this.hideSecondaryFabric = true;
         }
-        //////////////////////init secondary fabric////////////////////////        
+        //////////////////////init secondary fabric////////////////////////
         if (this.navParams.data.edit) {
           this.editItem();
         }
@@ -151,7 +150,7 @@ export class ItemPage implements OnInit {
         this.showError();
       });
     }
-    ////////////////INIT LOGO IN EDIT MODE//////////////////   
+    ////////////////INIT LOGO IN EDIT MODE//////////////////
   }
   GetSettingByBranch() {
     let loader = this.loadingCtrl.create();
@@ -161,9 +160,18 @@ export class ItemPage implements OnInit {
         this.branchSettings = response;
         ///////////INIT THE ITEM////////////
         this.getItemById(this.itemDTO.ItemCode);
-        ///////////INIT THE ITEM////////////        
-        this.orderItem.ProvaDate = this.calcDates(this.branchSettings.NumOfBrovaDays);
-        this.calcDelivaryDate();
+        ///////////INIT THE ITEM////////////
+
+        if (this.navParams.data.edit) {
+          if (this.orderItem.Urgent) {
+            this.delivaryDate = this.navParams.data.urgentDeliveryDate;
+          } else {
+            this.delivaryDate = this.navParams.data.deliveryDate;
+          }
+        } else {
+          this.calcDelivaryDate();
+          this.orderItem.ProvaDate = this.calcDates(this.branchSettings.NumOfBrovaDays);
+        }
         loader.dismiss();
       }, err => {
         loader.dismiss();
@@ -257,11 +265,11 @@ export class ItemPage implements OnInit {
       this.delivaryDate = this.calcDates(this.branchSettings.NumOfDeliveryDays);
     }
   }
-    calcDates(days) {
-      let date = new Date();
-      date.setDate(date.getDate() + days);
-      return date;
-    }
+  calcDates(days) {
+    let date = new Date();
+    date.setDate(date.getDate() + days);
+    return date;
+  }
   transformItemType(type: string) {
     let id: number;
     switch (type) {
@@ -309,12 +317,33 @@ export class ItemPage implements OnInit {
     });
     toast.present();
   }
-  barCodeScan() {
-    /*this.barcodeScanner.scan().then(barcodeData => {
+  barCodeScan(type) {
+    this.barcodeScanner.scan().then(barcodeData => {
       alert('Barcode data: '+ barcodeData.text);
-      console.log('Barcode data', barcodeData);
+      if (type == 'fabric') {
+        this.getServices.getFabricByBarCode(+ barcodeData.text).subscribe(res => {
+          console.log(res);
+          alert(JSON.stringify(res));
+        }, error => {
+          console.log(error);
+        });
+      } else if (type == 'secondaryFabric') {
+        this.getServices.getSubFabricByBarCode(+ barcodeData.text).subscribe(res => {
+          console.log(res);
+          alert(JSON.stringify(res));
+        }, error => {
+          console.log(error);
+        });
+      } else if (type == 'logo') {
+        this.getServices.getLogoByBarCode(+ barcodeData.text).subscribe(res => {
+          console.log(res);
+          alert(JSON.stringify(res));
+        }, error => {
+          console.log(error);
+        });
+      }
     }).catch(err => {
       console.log('Error', err);
-    });*/
+    });
   }
 }

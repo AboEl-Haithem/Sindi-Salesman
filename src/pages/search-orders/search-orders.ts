@@ -4,7 +4,8 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { OrderPage } from '../order/order';
 
 import { CustomerDTO } from '../../shared/customerDTO';
-import { GetService } from '../../shared/getServices';
+import { PostService } from '../../shared/postServices';
+import {GetService} from "../../shared/getServices";
 
 @IonicPage()
 @Component({
@@ -14,22 +15,22 @@ import { GetService } from '../../shared/getServices';
 export class SearchOrdersPage implements OnInit {
 
   customers: CustomerDTO[];
-  customer: CustomerDTO; 
+  customer: CustomerDTO;
   customersNames: string[];
   findOrderOption: any = 'code';
   searchValue: string;
   searchName: string;
   showSpinner: boolean = false;
-  GetCustomer: any; 
+  GetCustomer: any;
   searchMode: string = '3';
   orders: any[] = [];
   emptySearch = false;
 
   searchOrderByCode: FormGroup;
   searchOrderByPhone: FormGroup;
-  
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
-    private getServices: GetService, public loadingCtrl: LoadingController, private formBuilder: FormBuilder
+    private postServices: PostService, private getServices: GetService, public loadingCtrl: LoadingController, private formBuilder: FormBuilder
     , public ToastCtrl: ToastController, public modalCtrl: ModalController) {
 
       this.searchOrderByCode = this.formBuilder.group({
@@ -104,7 +105,15 @@ export class SearchOrdersPage implements OnInit {
     } else {
       value = this.searchValue
     }
-    this.getServices.GetSpecificOrder(value, this.findOrderOption, this.searchMode).subscribe(response => {
+    let data = {
+      name: value,
+      code: value,
+      phone: value,
+      date: value,
+      mode: this.findOrderOption,
+      flag: this.searchMode
+    }
+    this.postServices.GetSpecificOrder(data).subscribe(response => {
       this.orders = response;
       if (this.orders.length == 0) {
         this.emptySearch = true;

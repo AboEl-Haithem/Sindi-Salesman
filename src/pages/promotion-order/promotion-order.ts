@@ -87,11 +87,11 @@ export class PromotionOrderPage {
         this.viewItem(data.id);
       } else if (data && data.addMain == false) {
         let item: OrderItem = {
-          Count: 1,
+          Count: data.count, 
           HigherPrice: data.item.Price,
           ItemPrice: data.item.Price,
           piecePrice: data.item.Price,
-          TotalPrice: data.item.Price,
+          TotalPrice: data.item.Price * data.count,
           ItemCode: data.item.ItemCode,
           ItemName: data.item.ItemName,
           Urgent: false,
@@ -124,7 +124,6 @@ export class PromotionOrderPage {
     modal.present();
   }
   calcPromotionPrice(data, mode) {
-    console.log('calcPromotionPrice', data)
     let item: OrderItem = data.item;
     item.PromotionID = this.promotion.PromotionID;
     item.PromotionTypeID = this.promotion.PromotionTypeID;
@@ -288,7 +287,9 @@ export class PromotionOrderPage {
     let data = {
       edit: true,
       item: this.selectedItems[i],
-      promotion: this.promotion
+      promotion: this.promotion,
+      deliveryDate: this.navParams.data.deliveryDate,
+      urgentDeliveryDate: this.navParams.data.urgentDeliveryDate
     }
     let modal = this.modalCtrl.create(ItemPage, data);
     modal.onDidDismiss(data => {

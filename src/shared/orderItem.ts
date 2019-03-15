@@ -25,6 +25,7 @@ export interface OrderItem {
     ProvaDate?: Date;
 
     Count?: number;
+    note?: string;
 
     HigherPrice?: number;
     piecePrice?: number;

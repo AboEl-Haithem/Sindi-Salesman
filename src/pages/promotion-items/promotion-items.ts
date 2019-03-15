@@ -66,13 +66,51 @@ export class PromotionItemsPage implements OnInit {
         addMain: true,
         id: this.items[i].ItemCode
       }
+      this.viewCtrl.dismiss(data);
     } else {
-      data = {
-        addMain: false,
-        item: this.items[i]
+      console.log('this.promotion', this.promotion);
+      if (
+        (this.promotion.PromotionTypeID == 1 && this.promotion.PromotionItemNumber != null) ||
+        (this.promotion.PromotionTypeID == 3) 
+      ) {
+        data = {
+          addMain: false,
+          count: 1,
+          item: this.items[i]
+        }
+        this.viewCtrl.dismiss(data);
+      } else {
+        const prompt = this.alertCtrl.create({
+          message: "عدد القطع",
+          inputs: [
+            {
+              name: 'count',
+              type: 'number'
+            },
+          ],
+          buttons: [
+            {
+              text: 'إلغاء',
+              handler: data => {
+                console.log('Cancel clicked');
+              }
+            },
+            {
+              text: 'تم',
+              handler: data => {
+                data = {
+                  addMain: false,
+                  count: parseInt(data.count),
+                  item: this.items[i]
+                }
+                this.viewCtrl.dismiss(data);
+              }
+            }
+          ]
+        });
+        prompt.present();
       }
     }
-    this.viewCtrl.dismiss(data);
   }
   showError() {
     let toast = this.ToastCtrl.create({
